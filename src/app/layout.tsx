@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Website Clone",
-  description: "Pixel-perfect website clone",
+  title: "Land DPO Deals | DataVerse Solutions",
+  description:
+    "Free live masterclass, Saturday October 17th at 5:00 PM WAT: how to land ₦700k–₦1.5M/month Data Protection Officer deals in 90 days, even without prior privacy experience.",
+  icons: { icon: "/sites/dataverse/DATAVERSELOGO.jpeg" },
 };
 
 export default function RootLayout({
@@ -23,11 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }
