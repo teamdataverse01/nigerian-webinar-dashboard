@@ -28,7 +28,7 @@ function SeatButton({ final = false }: { final?: boolean }) {
     <div className="cta-block">
       <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer">
         <span className="cta-main">{final ? "Save My Free Webinar Seat Now" : "Register for the Free Live Masterclass"} <span aria-hidden="true">→</span></span>
-        <span className="cta-sub">Limited spots available</span>
+        <span className="cta-sub">Limited spots available this week</span>
       </a>
       {final ? <p className="cta-note">No replay will be available. Show up live.</p> : null}
     </div>
@@ -106,7 +106,7 @@ export default function Home() {
 
             <div className="cta-block" id="hero-cta">
               <StrategyButton />
-              <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available</span></a>
+              <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available this week</span></a>
             </div>
           </div>
         </section>
@@ -179,8 +179,8 @@ export default function Home() {
             <h2 className="reveal">Get Immediate Access to the DataVerse <span className="hl">WhatsApp VIP Community</span></h2>
             <p className="lede reveal">Don’t wait until Saturday to start building your future. Register for the masterclass today and get immediate access to our private WhatsApp VIP group.</p>
             <div className="bonus-grid">
-              <article className="bonus-card reveal"><div className="bonus-top"><strong>Instant Access</strong><span>Included</span></div><p className="bonus-title">Execution cheat sheets</p><p>Pre-webinar execution cheat sheets and career transition starter guides.</p></article>
-              <article className="bonus-card reveal"><div className="bonus-top"><strong>Direct Access</strong><span>Ongoing</span></div><p className="bonus-title">Direct Access</p><p>Real-world privacy teardowns, insider market updates, and direct peer support.</p></article>
+              <article className="bonus-card reveal"><div className="bonus-top"><strong>Instant Access</strong></div><p className="bonus-title">Execution cheat sheets</p><p>Pre-webinar execution cheat sheets and career transition starter guides.</p></article>
+              <article className="bonus-card reveal"><div className="bonus-top"><strong>Direct Access</strong></div><p className="bonus-title">Direct Access</p><p>Real-world privacy teardowns, insider market updates, and direct peer support.</p></article>
             </div>
             <a className="ghost-link reveal" href="https://chat.whatsapp.com/FFVu9ZZEi5C0FhvsisOlMe?mode=gi_t" target="_blank" rel="noopener noreferrer">Join the WhatsApp VIP Community →</a>
           </div>
