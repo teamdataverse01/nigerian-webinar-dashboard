@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Land a $120K+ Data Privacy Career | DataVerse Solutions",
+  title: "Land a $120K+ Data Privacy Career in 90 Days Without Writing a Single Line of Code (Or Starting Over From Scratch)",
   description:
-    "Learn the DataVerse career transition blueprint for a $120K+ Data Privacy role, plus join the free live masterclass on Saturday, October 17th at 5:00 PM WAT.",
+    "Learn the exact transition blueprint used by professionals from Tech, Compliance, Legal, HR, Finance, and Operations to break into one of the highest-paying, most secure niches in tech.",
   icons: { icon: "/sites/dataverse/DATAVERSELOGO.jpeg" },
 };
 
