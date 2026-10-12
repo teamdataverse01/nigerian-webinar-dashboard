@@ -201,7 +201,7 @@ export default function Home() {
             <h2 className="reveal">Get a <span className="hl">Customized 1:1 Plan</span></h2>
             <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy career.</p>
             <div className="reveal"><StrategyButton label="Schedule Your Private 1:1 Strategy Call Now" /></div>
-            <a className="ghost-link reveal" href={seatUrl} target="_blank" rel="noopener noreferrer">🎟 Register for the free live webinar instead →</a>
+            <a className="ghost-link reveal" href={seatUrl} target="_blank" rel="noopener noreferrer">🎟 Register for the free live webinar →</a>
           </div>
         </section>
       </main>
