@@ -28,7 +28,6 @@ function SeatButton({ final = false }: { final?: boolean }) {
     <div className="cta-block">
       <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer">
         <span className="cta-main">{final ? "Save My Free Webinar Seat Now" : "Register for the Free Live Masterclass"} <span aria-hidden="true">→</span></span>
-        <span className="cta-sub">Limited spots available this week</span>
       </a>
       {final ? <p className="cta-note">No replay will be available. Show up live.</p> : null}
     </div>
@@ -106,7 +105,7 @@ export default function Home() {
 
             <div className="cta-block" id="hero-cta">
               <StrategyButton />
-              <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available this week</span></a>
+              <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></a>
             </div>
           </div>
         </section>
