@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const seatUrl = "https://calendly.com/data-privacy_beginner_01/new-meeting-1";
 const strategyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
-const webinarDate = new Date("2026-10-17T12:00:00-07:00").getTime();
+const webinarDate = new Date("2026-10-17T12:00:00-04:00").getTime();
 
 function useCountdown() {
   const [remaining, setRemaining] = useState(0);
@@ -165,7 +165,7 @@ export default function Home() {
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Prefer to join a group session first? Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
-            <p className="countdown-label training-countdown-label">Webinar starts in · Saturday, October 17th · 12:00 PM PT</p>
+            <p className="countdown-label training-countdown-label">Webinar starts in · Saturday, October 17th · 12:00 PM Eastern Time, 9:00 AM Pacific Time</p>
             <div className="countdown training-countdown">{Object.entries(countdown).map(([unit, value]) => <div key={unit}><strong>{String(value).padStart(2, "0")}</strong><span>{unit}</span></div>)}</div>
             <a className="cta reveal" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></a>
           </div>
@@ -188,7 +188,7 @@ export default function Home() {
           <div className="wrap center narrow">
             <p className="pill reveal">Event details</p>
             <h2 className="reveal">Join the Free Live Training</h2>
-            <dl className="event-facts reveal"><div><dt>Date</dt><dd>Saturday, October 17th</dd></div><div><dt>Time</dt><dd>12:00 PM PT</dd></div><div><dt>Cost</dt><dd>100% Free</dd></div></dl>
+            <dl className="event-facts reveal"><div><dt>Date</dt><dd>Saturday, October 17th</dd></div><div><dt>Time</dt><dd>12:00 PM Eastern Time, 9:00 AM Pacific Time</dd></div><div><dt>Cost</dt><dd>100% Free</dd></div></dl>
             <div className="reveal"><SeatButton final /></div>
           </div>
         </section>
@@ -209,7 +209,7 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Sat, Oct 17 · 12:00 PM PT</span></div><a href={seatUrl} target="_blank" rel="noopener noreferrer">Register</a></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Sat, Oct 17 · 12:00 PM Eastern Time, 9:00 AM Pacific Time</span></div><a href={seatUrl} target="_blank" rel="noopener noreferrer">Register</a></div>
     </>
   );
 }
