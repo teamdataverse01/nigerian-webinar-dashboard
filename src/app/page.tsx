@@ -116,11 +116,8 @@ export default function Home() {
             <p className="pill reveal">Stop buying the big lie</p>
             <h2 className="reveal">You Do Not Need to <span className="hl">Start Over</span></h2>
             <div className="stuck-card reveal">
-              <p>If you want to switch into Data Privacy, you’ve probably been told you need a law degree, a computer science background, or years of starting at the bottom making peanuts. <strong>That is completely false.</strong></p>
-              <p>If you already have experience in customer service, Sales, Marketing,, Risk, Legal, HR, Audit, Finance, Operations, or Project Management… you are sitting on a goldmine.</p>
-              <p>Your background isn’t a disadvantage. It’s the unfair advantage you need to skip the line.</p>
-              <p>Companies aren’t looking for textbook theorists who can quote regulations. They are looking for professionals who understand business and can execute privacy frameworks.</p>
-              <p>Let us show you how to map what you already know directly onto a $120K+ Data Privacy role—without quitting your job or going back to school.</p>
+              <p>If you want to switch into Data Privacy, you may have been told you need a law degree, a computer science background, or years of starting at the bottom making peanuts. <strong>That is completely false.</strong></p>
+              <p><strong>Your experience in customer service, sales, marketing, risk, legal, HR, audit, finance, operations, or project management is an unfair advantage. Companies need professionals who understand business and can execute privacy frameworks—not textbook theorists. Map what you already know to a $120K+ privacy role without quitting your job or going back to school.</strong></p>
             </div>
           </div>
         </section>
