@@ -44,10 +44,10 @@ const learningPoints = [
 ];
 
 const testimonials = [
-  { metric: "Privacy role at Meta", context: "Former HR Manager → Privacy Leader at Meta", image: "image1.webp", alt: "Confident African woman in her late 30s in a modern tech office environment", quote: "“After almost 10 years in HR, I felt completely stuck. This program taught me how to translate my people operations background into privacy governance—and I landed a Data Privacy role at Meta!”", name: "Former HR Manager", role: "Privacy Leader at Meta" },
-  { metric: "Two six-figure offers", context: "Former Sales Representative → Data Privacy Specialist", image: "image2.webp", alt: "Enthusiastic African man in his early 30s in a modern co-working space", quote: "“I went from struggling in sales to having two competing six-figure Data Privacy offers on the table in less than 6 weeks.”", name: "Former Sales Representative", role: "Data Privacy Specialist" },
-  { metric: "Doubled salary", context: "Former Bank Customer Care Rep → Senior Data Privacy Analyst", image: "image3.webp", alt: "Focused African woman in her late 20s at a sleek corporate desk", quote: "“I was working front-line Customer Care at a bank. Joining this program allowed me to double my salary on my very next career move.”", name: "Former Bank Customer Care Rep", role: "Senior Data Privacy Analyst" },
-  { metric: "First remote privacy role", context: "Pharmacist (20 Yrs Experience) → Senior Remote Data Privacy Professional", image: "image4.webp", alt: "Distinguished African man in his late 40s working in a bright modern home office", quote: "“After 20 years as a pharmacist, I wanted out of the grind. Temi’s framework helped me secure my very first remote Data Privacy position as a Senior Professional.”", name: "Pharmacist (20 Yrs Experience)", role: "Senior Remote Data Privacy Professional" },
+  { metric: "Privacy role at Meta", context: "Former HR Manager → Privacy Leader at Meta", image: "image1-thumb.webp", alt: "Confident African woman in her late 30s in a modern tech office environment", quote: "“After almost 10 years in HR, I felt completely stuck. This program taught me how to translate my people operations background into privacy governance—and I landed a Data Privacy role at Meta!”", name: "Former HR Manager", role: "Privacy Leader at Meta" },
+  { metric: "Two six-figure offers", context: "Former Sales Representative → Data Privacy Specialist", image: "image2-thumb.webp", alt: "Enthusiastic African man in his early 30s in a modern co-working space", quote: "“I went from struggling in sales to having two competing six-figure Data Privacy offers on the table in less than 6 weeks.”", name: "Former Sales Representative", role: "Data Privacy Specialist" },
+  { metric: "Doubled salary", context: "Former Bank Customer Care Rep → Senior Data Privacy Analyst", image: "image3-thumb.webp", alt: "Focused African woman in her late 20s at a sleek corporate desk", quote: "“I was working front-line Customer Care at a bank. Joining this program allowed me to double my salary on my very next career move.”", name: "Former Bank Customer Care Rep", role: "Senior Data Privacy Analyst" },
+  { metric: "First remote privacy role", context: "Pharmacist (20 Yrs Experience) → Senior Remote Data Privacy Professional", image: "image4-thumb.webp", alt: "Distinguished African man in his late 40s working in a bright modern home office", quote: "“After 20 years as a pharmacist, I wanted out of the grind. Temi’s framework helped me secure my very first remote Data Privacy position as a Senior Professional.”", name: "Pharmacist (20 Yrs Experience)", role: "Senior Remote Data Privacy Professional" },
 ];
 
 function StrategyButton({ label = "Book a Free 1:1 Career Strategy Call With Temi" }: { label?: string }) {
@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <>
       <header className="topbar">
-        <a href="#top" aria-label="DataVerse Solutions home"><img className="topbar-logo" src="/sites/dataverse/DATAVERSELOGO.jpeg" alt="DataVerse Solutions" /></a>
+        <a href="#top" aria-label="DataVerse Solutions home"><img className="topbar-logo" src="/sites/dataverse/dataverse-logo.webp" alt="DataVerse Solutions" /></a>
       </header>
 
       <main id="top">
@@ -95,7 +95,7 @@ export default function Home() {
             <p className="hero-sub">Learn the exact transition blueprint used by professionals in customer service, banking, sales, and marketing to break into one of the highest-paying, most secure niches in tech.</p>
 
             <div className="hero-media">
-              <img src="/sites/dataverse/temifirst.jpeg" alt="Temi, host of the DataVerse masterclass" />
+              <img src="/sites/dataverse/temifirst-optimized.webp" alt="Temi, host of the DataVerse masterclass" fetchPriority="high" decoding="async" />
               <div className="hero-countdown">
                 <p className="countdown-label">Webinar starts in:</p>
                 <div className="countdown">
@@ -138,7 +138,7 @@ export default function Home() {
           <div className="wrap center narrow">
             <p className="pill reveal">Meet your coach: Temi</p>
             <h2 className="reveal">From $75K to a <span className="hl">$400K+ Big Tech Privacy Leader</span></h2>
-            <figure className="host-photo reveal"><img src="/sites/dataverse/temisecond.jpeg" alt="Temi speaking at a DataVerse session" loading="lazy" /></figure>
+            <figure className="host-photo reveal"><img src="/sites/dataverse/temisecond-optimized.webp" alt="Temi speaking at a DataVerse session" loading="lazy" /></figure>
             <div className="host-bio reveal">
               <p>Over the past 9+ years, Temi has designed and executed massive privacy programs at global powerhouses like <strong>Deloitte</strong> and <strong>Meta</strong>.</p>
               <p className="host-lead">She’s sat on the inside. She knows what hiring managers look for, what makes a resume hit the trash pile, and what skills command a six-figure salary.</p>
@@ -207,7 +207,7 @@ export default function Home() {
       </main>
 
       <footer className="footer"><div className="wrap center">
-        <img className="footer-logo" src="/sites/dataverse/DATAVERSELOGO.jpeg" alt="DataVerse Solutions" />
+        <img className="footer-logo" src="/sites/dataverse/dataverse-logo.webp" alt="DataVerse Solutions" />
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
