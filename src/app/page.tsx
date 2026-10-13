@@ -155,7 +155,9 @@ export default function Home() {
             <h2 className="reveal">Six-Figure <span className="hl">Results.</span></h2>
             <div className="results-shell reveal">{testimonials.map((testimonial) => <article className="result-card" key={testimonial.name}>
               <p className="result-metric">{testimonial.metric}</p><p className="result-context">{testimonial.context}</p>
-              <img className="result-photo" src={`/sites/dataverse/${testimonial.image}`} alt={testimonial.alt} loading="lazy" />
+              <div className={`result-photo-frame${testimonial.image === "image2-thumb.webp" || testimonial.image === "image3-thumb.webp" ? " focus-left" : ""}`}>
+                <img className="result-photo" src={`/sites/dataverse/${testimonial.image}`} alt={testimonial.alt} loading="lazy" />
+              </div>
               <blockquote>{testimonial.quote}</blockquote>
               <div className="result-person"><strong>{testimonial.name}</strong><span>{testimonial.role}</span></div>
             </article>)}</div>
