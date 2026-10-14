@@ -90,7 +90,7 @@ export default function Home() {
           <div className="hero-glow" aria-hidden="true" />
           <div className="wrap center">
             <p className="badge-outline"><span className="dot" />$120K+ Data Privacy Career</p>
-            <h1>Land a <span className="hl nw">$120K+ Data Privacy Career</span> in 90 Days Without Writing a Single Line of Code (Or Starting Over From Scratch)</h1>
+            <h1>Land a <span className="hl nw">$120K+ Data Privacy Job</span> in 90 Days Without Writing a Single Line of Code (Or Starting Over From Scratch)</h1>
             <p className="hero-sub">Learn the exact transition blueprint used by professionals in customer service, banking, sales, and marketing to break into one of the highest-paying, most secure niches in tech.</p>
 
             <div className="hero-media">
