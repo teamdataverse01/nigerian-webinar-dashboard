@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-const seatUrl = "https://calendly.com/data-privacy_beginner_01/new-meeting-1";
+const seatUrl = "https://calendly.com/data-privacy_beginner_01/how-to-transition-into-tech-without-a-tech-degree";
 const strategyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
-const webinarDate = new Date("2026-10-17T12:00:00-04:00").getTime();
+const webinarDate = new Date("2026-10-24T12:00:00-04:00").getTime();
 
 function useCountdown() {
   const [remaining, setRemaining] = useState(0);
@@ -165,7 +165,7 @@ export default function Home() {
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Prefer to join a group session first? Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
-            <p className="countdown-label training-countdown-label">Webinar starts in · Saturday, October 17th · 12:00 PM Eastern Time, 9:00 AM Pacific Time</p>
+            <p className="countdown-label training-countdown-label">Webinar starts in · Saturday, October 24th · 12:00 PM Eastern Time, 9:00 AM Pacific Time</p>
             <div className="countdown training-countdown">{Object.entries(countdown).map(([unit, value]) => <div key={unit}><strong>{String(value).padStart(2, "0")}</strong><span>{unit}</span></div>)}</div>
             <a className="cta reveal" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></a>
           </div>
@@ -180,7 +180,7 @@ export default function Home() {
               <article className="bonus-card reveal"><div className="bonus-top"><strong>Instant Access</strong></div><p className="bonus-title">Execution cheat sheets</p><p>Pre-webinar execution cheat sheets and career transition starter guides.</p></article>
               <article className="bonus-card reveal"><div className="bonus-top"><strong>Direct Access</strong></div><p className="bonus-title">Direct Access</p><p>Real-world privacy teardowns, insider market updates, and direct peer support.</p></article>
             </div>
-            <a className="ghost-link reveal" href="https://chat.whatsapp.com/FFVu9ZZEi5C0FhvsisOlMe?mode=gi_t" target="_blank" rel="noopener noreferrer">Join the WhatsApp VIP Community →</a>
+            <a className="ghost-link reveal" href="https://chat.whatsapp.com/EQGgwCtcU1k5M3GOTYByij?s=cl&p=i&ilr=4&iam=2" target="_blank" rel="noopener noreferrer">Join the WhatsApp VIP Community →</a>
           </div>
         </section>
 
@@ -188,7 +188,7 @@ export default function Home() {
           <div className="wrap center narrow">
             <p className="pill reveal">Event details</p>
             <h2 className="reveal">Join the Free Live Training</h2>
-            <dl className="event-facts reveal"><div><dt>Date</dt><dd>Saturday, October 17th</dd></div><div><dt>Time</dt><dd>12:00 PM Eastern Time, 9:00 AM Pacific Time</dd></div><div><dt>Cost</dt><dd>100% Free</dd></div></dl>
+            <dl className="event-facts reveal"><div><dt>Date</dt><dd>Saturday, October 24th</dd></div><div><dt>Time</dt><dd>12:00 PM Eastern Time, 9:00 AM Pacific Time</dd></div><div><dt>Cost</dt><dd>100% Free</dd></div></dl>
             <div className="reveal"><SeatButton final /></div>
           </div>
         </section>
@@ -209,7 +209,7 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Sat, Oct 17 · 12:00 PM Eastern Time, 9:00 AM Pacific Time</span></div><a href={seatUrl} target="_blank" rel="noopener noreferrer">Register</a></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Sat, Oct 24 · 12:00 PM Eastern Time, 9:00 AM Pacific Time</span></div><a href={seatUrl} target="_blank" rel="noopener noreferrer">Register</a></div>
     </>
   );
 }
