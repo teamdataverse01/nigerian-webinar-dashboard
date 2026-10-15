@@ -89,7 +89,7 @@ export default function Home() {
         <section className="hero">
           <div className="hero-glow" aria-hidden="true" />
           <div className="wrap center">
-            <p className="badge-outline"><span className="dot" />$120K+ Data Privacy Career</p>
+            <p className="badge-outline"><span className="dot" />$120K+ Data Privacy Job</p>
             <h1>Land a <span className="hl nw">$120K+ Data Privacy Job</span> in 90 Days Without Writing a Single Line of Code (Or Starting Over From Scratch)</h1>
             <p className="hero-sub">Learn the exact transition blueprint used by professionals in customer service, banking, sales, and marketing to break into one of the highest-paying, most secure niches in tech.</p>
 
@@ -197,7 +197,7 @@ export default function Home() {
           <div className="wrap center narrow">
             <p className="pill reveal">Want to skip the wait and get a customized 1:1 plan?</p>
             <h2 className="reveal">Get a <span className="hl">Customized 1:1 Plan</span></h2>
-            <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy career.</p>
+            <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy job.</p>
             <div className="reveal"><StrategyButton label="Schedule Your Private 1:1 Strategy Call Now" /></div>
             <a className="ghost-link reveal" href={seatUrl} target="_blank" rel="noopener noreferrer">🎟 Register for the free live webinar →</a>
           </div>
