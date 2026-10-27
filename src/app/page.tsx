@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const seatUrl = "https://calendly.com/data-privacy_beginner_01/how-to-transition-into-tech-without-a-tech-degree";
+const seatUrl = "https://calendly.com/d/dv7s-hyb-7mt";
 const strategyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const webinarDate = new Date("2026-10-24T12:00:00-04:00").getTime();
 
