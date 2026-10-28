@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 const seatUrl = "https://calendly.com/d/dv7s-hyb-7mt";
-const strategyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const webinarDate = new Date("2026-11-07T12:00:00-05:00").getTime();
 
 function useCountdown() {
@@ -50,7 +49,7 @@ const testimonials = [
 ];
 
 function StrategyButton({ label = "Book a Free 1:1 Career Strategy Call With Temi" }: { label?: string }) {
-  return <a className="cta strategy-cta" href={strategyUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">📞 {label} <span aria-hidden="true">→</span></span></a>;
+  return <a className="cta strategy-cta" href="/apply" target="_blank" rel="noopener noreferrer"><span className="cta-main">📞 {label} <span aria-hidden="true">→</span></span></a>;
 }
 
 export default function Home() {
