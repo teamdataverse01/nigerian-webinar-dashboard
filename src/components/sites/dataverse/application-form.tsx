@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const calendlyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const qualifyingInvestment = ["invest_full", "invest_plan"];
+const disqualifyingTimeline = ["exploring"];
 const socials = {
   youtube: "https://youtu.be/MVLanDqTgCk?si=K0VGjEtKN0FOBju0",
   linkedin: "https://www.linkedin.com/company/dataverse-consulting-solutions/",
@@ -90,6 +91,16 @@ const questions: Question[] = [
       { value: "need_time", label: "I'm interested, but need more time to prepare financially" },
       { value: "exploring", label: "I'm exploring options and haven't decided whether to invest" },
       { value: "free", label: "I'm currently looking for free resources or mentorship" },
+    ],
+  },
+  {
+    id: "timeline",
+    title: "How soon are you looking to start and get this implemented?",
+    options: [
+      { value: "asap", label: "ASAP / Within the next 1–2 weeks" },
+      { value: "30_days", label: "Within the next 30 days" },
+      { value: "1_3_months", label: "1 to 3 months out" },
+      { value: "exploring", label: "Just exploring options / Researching for later" },
     ],
   },
   {
@@ -181,7 +192,7 @@ export function ApplicationForm() {
   }, [current, total]);
 
   const finish = useCallback((final: Record<string, Answer>) => {
-    if (qualifyingInvestment.includes(final.investment?.value)) {
+    if (qualifyingInvestment.includes(final.investment?.value) && !disqualifyingTimeline.includes(final.timeline?.value)) {
       window.location.href = calendlyUrl;
       return;
     }
@@ -245,7 +256,9 @@ export function ApplicationForm() {
   }, [current]);
 
   const screenClass = (i: number) => `ap-screen${i === current ? " active" : ""}${i === leaving ? " leave-up" : ""}`;
-  const tailored = tailoredMessages[answers.investment?.value ?? ""] ?? "We appreciate you taking the time to share where you are right now.";
+  const tailored = tailoredMessages[answers.investment?.value ?? ""]
+    ?? (answers.timeline?.value === "exploring" ? tailoredMessages.exploring : undefined)
+    ?? "We appreciate you taking the time to share where you are right now.";
 
   return (
     <div className="ap-root">
