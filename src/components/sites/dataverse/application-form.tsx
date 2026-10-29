@@ -8,7 +8,7 @@ const qualifyingInvestment = ["invest_full", "invest_plan"];
 const disqualifyingTimeline = ["exploring"];
 const socials = {
   youtube: "https://youtu.be/MVLanDqTgCk?si=K0VGjEtKN0FOBju0",
-  linkedin: "https://www.linkedin.com/company/dataverse-consulting-solutions/",
+  linkedin: "https://www.linkedin.com/in/temiloluolaniyan/",
   instagram: "https://www.instagram.com/reel/DdvgMrbIdfN/?stkn=MWVjZTB2YmR3YTVhOQ==",
 };
 const letters = "ABCDEFGHIJ";
