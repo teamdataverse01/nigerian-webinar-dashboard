@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const calendlyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const qualifyingInvestment = ["invest_full", "invest_plan"];
 const disqualifyingTimeline = ["exploring"];
+const qualifyingLocations = ["us", "ca", "au"];
 const socials = {
   youtube: "https://youtu.be/MVLanDqTgCk?si=K0VGjEtKN0FOBju0",
   linkedin: "https://www.linkedin.com/in/temiloluolaniyan/",
@@ -192,7 +193,11 @@ export function ApplicationForm() {
   }, [current, total]);
 
   const finish = useCallback((final: Record<string, Answer>) => {
-    if (qualifyingInvestment.includes(final.investment?.value) && !disqualifyingTimeline.includes(final.timeline?.value)) {
+    if (
+      qualifyingInvestment.includes(final.investment?.value)
+      && !disqualifyingTimeline.includes(final.timeline?.value)
+      && qualifyingLocations.includes(final.location?.value)
+    ) {
       window.location.href = calendlyUrl;
       return;
     }
@@ -256,7 +261,10 @@ export function ApplicationForm() {
   }, [current]);
 
   const screenClass = (i: number) => `ap-screen${i === current ? " active" : ""}${i === leaving ? " leave-up" : ""}`;
-  const tailored = tailoredMessages[answers.investment?.value ?? ""]
+  const outsideRegion = onResult && !qualifyingLocations.includes(answers.location?.value);
+  const tailored = outsideRegion
+    ? "Thank you for your interest in growing your privacy career. Right now, our 90-day coaching program is only open to professionals based in the United States, Canada and Australia."
+    : tailoredMessages[answers.investment?.value ?? ""]
     ?? (answers.timeline?.value === "exploring" ? tailoredMessages.exploring : undefined)
     ?? "We appreciate you taking the time to share where you are right now.";
 
@@ -324,7 +332,9 @@ export function ApplicationForm() {
               <div className="ap-eyebrow">Thank you for applying</div>
               <h1>Thank you. Your journey into privacy is just getting started.</h1>
               <p>{tailored}</p>
-              <p>Our 90-day coaching program is an intensive, hands-on commitment, so we save our strategy sessions for people who are ready to start now. That isn&apos;t the right next step for you yet, and that&apos;s completely okay. <strong>Your goals are valid, and the door stays open.</strong></p>
+              {outsideRegion
+                ? <p>That means we can&apos;t offer you a strategy session at the moment, but it doesn&apos;t change what you&apos;re capable of. <strong>Your goals are valid, and the door stays open.</strong></p>
+                : <p>Our 90-day coaching program is an intensive, hands-on commitment, so we save our strategy sessions for people who are ready to start now. That isn&apos;t the right next step for you yet, and that&apos;s completely okay. <strong>Your goals are valid, and the door stays open.</strong></p>}
               <div className="ap-steps">
                 <div className="ap-step">
                   <div className="ap-step-icon"><UsersIcon /></div>
@@ -339,7 +349,9 @@ export function ApplicationForm() {
                   </div>
                 </div>
                 <div className="ap-step"><div className="ap-step-icon"><BookIcon /></div><div><b>Keep building momentum</b><span>Look out for our free webinars and content. They&apos;re designed to move you forward right now.</span></div></div>
-                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div><b>Come back when you&apos;re ready</b><span>When the timing is right, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></div></div>
+                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div>{outsideRegion
+                  ? <><b>Come back when we&apos;re in your region</b><span>If we open the program to your country, or you move to one of these countries, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></>
+                  : <><b>Come back when you&apos;re ready</b><span>When the timing is right, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></>}</div></div>
               </div>
               <p className="ap-signoff">Rooting for you,<br />The Dataverse Team</p>
             </div>
