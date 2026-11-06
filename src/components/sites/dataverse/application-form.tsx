@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const calendlyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
-const qualifyingInvestment = ["invest_full", "invest_plan"];
-const disqualifyingTimeline = ["exploring"];
+const qualifyingFunding = ["funds_ready", "payment_plan"];
+const qualifyingStart = ["immediately", "30_days", "1_3_months"];
 const qualifyingLocations = ["us", "ca", "au"];
 const socials = {
   youtube: "https://youtu.be/MVLanDqTgCk?si=K0VGjEtKN0FOBju0",
@@ -14,118 +14,157 @@ const socials = {
 };
 const letters = "ABCDEFGHIJ";
 
-type Option = { value: string; label: string; other?: boolean };
-type Question = { id: string; title: string; hint?: string; options: Option[] };
-type Answer = { value: string; detail?: string };
+type Option = { value: string; label: string };
+type IntroLine = string | { note: string };
+type Step = {
+  id: string;
+  type: "single" | "multi" | "text" | "textarea";
+  title: string;
+  hint?: string;
+  placeholder?: string;
+  intro?: IntroLine[];
+  options?: Option[];
+};
+type AnswerValue = string | string[];
+type Outcome = "not_fit" | "not_yet" | "outside_region" | "no_commit";
 
-const questions: Question[] = [
-  {
-    id: "background",
-    title: "Which best describes your current professional background?",
-    options: [
-      { value: "tech", label: "IT, cybersecurity, engineering or data analytics" },
-      { value: "regulated", label: "Law, HR, healthcare or compliance" },
-      { value: "business", label: "Project management, sales, marketing or customer service" },
-      { value: "privacy", label: "I already work in data privacy or data protection" },
-      { value: "other", label: "Other professional fields" },
-    ],
-  },
+const steps: Step[] = [
   {
     id: "goal",
-    title: "What is your main goal for joining this program?",
+    type: "single",
+    title: "Are you looking to build hands-on Data Privacy experience to land a high-paying job?",
     options: [
-      { value: "first_role", label: "Secure my first data privacy role" },
-      { value: "senior_role", label: "Advance into a more senior privacy role" },
-      { value: "skills", label: "Build practical privacy skills for my current job" },
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
     ],
   },
   {
-    id: "challenge",
-    title: "What is your biggest challenge right now?",
+    id: "why_now",
+    type: "multi",
+    title: "Why is a Data Privacy role important to you now?",
+    hint: "Choose all that apply.",
     options: [
-      { value: "start", label: "I don't know where to start or which roles to target" },
-      { value: "experience", label: "I've studied privacy but lack practical experience" },
-      { value: "recruiters", label: "Recruiters aren't reaching out" },
-      { value: "no_interviews", label: "I apply for roles but rarely receive interview invitations" },
-      { value: "no_offers", label: "I get interviews but struggle to secure offers" },
+      { value: "income", label: "I want to increase my income and financial security" },
+      { value: "flexibility", label: "I want more flexibility and a better work-life balance" },
+      { value: "invested", label: "I've invested in training or certifications and want to turn that into a Data Privacy role" },
     ],
   },
   {
-    id: "current_salary",
-    title: "What is your current annual salary range?",
-    hint: "In USD. This helps us understand where you're starting from.",
+    id: "min_salary",
+    type: "single",
+    title: "What is the minimum salary you would accept that would also be a step up from your current role?",
     options: [
-      { value: "lt45", label: "Below $45K" },
-      { value: "45_70", label: "$45K – under $70K" },
-      { value: "70_100", label: "$70K – under $100K" },
-      { value: "100p", label: "$100K+" },
+      { value: "under_80", label: "Under $80K" },
+      { value: "80_100", label: "$80K – $100K" },
+      { value: "100_130", label: "$100K – $130K" },
+      { value: "over_130", label: "Over $130K" },
     ],
   },
   {
-    id: "commitment",
-    title: "Can you commit 5 hours each week for 90 days to coaching and career preparation?",
+    id: "missing",
+    type: "multi",
+    title: "What do you feel you're missing to confidently pursue a Data Privacy role?",
+    hint: "Choose all that apply.",
     options: [
-      { value: "yes", label: "Yes, I can consistently commit that time" },
-      { value: "yes_rearrange", label: "Yes, but I need to rearrange my schedule before starting" },
-      { value: "unsure", label: "I'm unsure whether I can commit that time" },
-      { value: "no", label: "No, I can't commit that time right now" },
+      { value: "knowledge", label: "Practical knowledge of Data Privacy frameworks, tools, and processes" },
+      { value: "projects", label: "Hands-on Data Privacy project experience to show employers" },
+      { value: "presenting", label: "Presenting my skills and experience clearly on my resume and in interviews" },
+      { value: "unsure", label: "I'm not sure yet and would like help identifying my gaps" },
     ],
   },
   {
-    id: "target_salary",
-    title: "What salary range are you targeting in your next data privacy role?",
-    hint: "Annual, in USD.",
+    id: "situation",
+    type: "multi",
+    title: "Which of the following describe your current situation?",
+    hint: "Choose all that apply.",
     options: [
-      { value: "100_125", label: "$100K – $125K" },
-      { value: "125_150", label: "$125K – $150K" },
-      { value: "150_175", label: "$150K – $175K" },
-      { value: "175_200", label: "$175K – $200K" },
-      { value: "200p", label: "$200K+" },
+      { value: "working", label: "Working (employed, self-employed, or contracting)" },
+      { value: "not_working_short", label: "Not working, for less than six months" },
+      { value: "not_working_long", label: "Not working, for six months or longer" },
+      { value: "studying", label: "Currently enrolled in an education or training program" },
     ],
   },
   {
-    id: "investment",
-    title: "How willing are you to invest in your career through our 90-day data privacy coaching program?",
+    id: "profession",
+    type: "text",
+    title: "What is your current or most recent profession, and how many years of experience do you have in that field?",
+    placeholder: "E.g. Project Manager, 5 years",
+  },
+  {
+    id: "tried",
+    type: "textarea",
+    title: "What have you tried so far to move into Data Privacy?",
+    hint: "One or two sentences is enough. If you're just starting, say so.",
+    placeholder: "Type your answer here…",
+  },
+  {
+    id: "funding",
+    type: "single",
+    title: "If we're a fit, how would you fund the program?",
+    intro: ["Our program fees range between $3,500 and $5,000."],
+    hint: "Choose one.",
     options: [
-      { value: "invest_full", label: "I'm ready to invest and can pay in full" },
-      { value: "invest_plan", label: "I'm ready to invest through the available payment plan" },
-      { value: "need_time", label: "I'm interested, but need more time to prepare financially" },
-      { value: "exploring", label: "I'm exploring options and haven't decided whether to invest" },
-      { value: "free", label: "I'm currently looking for free resources or mentorship" },
+      { value: "funds_ready", label: "I have the funds ready" },
+      { value: "payment_plan", label: "I can afford the fees on a payment plan" },
+      { value: "find_way", label: "I need to find a way to pay" },
+      { value: "cant_afford", label: "I can't afford it right now" },
     ],
   },
   {
-    id: "timeline",
-    title: "How soon are you looking to start and get this implemented?",
+    id: "start",
+    type: "single",
+    title: "If we're a fit, how soon could you start?",
+    hint: "Choose one.",
     options: [
-      { value: "asap", label: "ASAP / Within the next 1–2 weeks" },
-      { value: "30_days", label: "Within the next 30 days" },
-      { value: "1_3_months", label: "1 to 3 months out" },
-      { value: "exploring", label: "Just exploring options / Researching for later" },
+      { value: "immediately", label: "Immediately" },
+      { value: "30_days", label: "Within 30 days" },
+      { value: "1_3_months", label: "In 1–3 months" },
+      { value: "3_6_months", label: "In 3–6 months" },
+      { value: "exploring", label: "Just exploring" },
+    ],
+  },
+  {
+    id: "decision",
+    type: "single",
+    title: "Is there anyone else who needs to be supportive of this decision?",
+    options: [
+      { value: "mine", label: "No, it's my decision" },
+      { value: "partner", label: "Yes, my partner or spouse" },
+      { value: "someone_else", label: "Yes, someone else (parent, employer, etc.)" },
     ],
   },
   {
     id: "location",
+    type: "single",
     title: "Where are you currently located?",
     options: [
       { value: "us", label: "United States" },
       { value: "ca", label: "Canada" },
       { value: "uk", label: "United Kingdom" },
       { value: "au", label: "Australia" },
-      { value: "other", label: "Other", other: true },
+      { value: "other", label: "Other" },
+    ],
+  },
+  {
+    id: "attend",
+    type: "single",
+    title: "Will you attend at the time you book?",
+    intro: [
+      "On your admissions call, a Data Privacy Career Consultant will help you spot gaps in your skills and experience.",
+      "Together, you'll discuss your next steps and whether our program fits your goals.",
+      { note: "Choose a time you can attend. If your plans change, tell us before the call. We do not reschedule no-shows." },
+    ],
+    options: [
+      { value: "yes", label: "Yes, I'll be there" },
+      { value: "no", label: "No" },
     ],
   },
 ];
 
-const tailoredMessages: Record<string, string> = {
-  need_time: "It's clear you're serious about your growth, and it's wise to make sure the timing is right financially before you commit. The right season matters, and there's no rush.",
-  exploring: "Taking time to weigh your options before you commit is a smart move. A decision this important deserves careful thought.",
-  free: "Starting with free resources is a great way to build your foundation, and there's a lot you can learn before taking the next step.",
-};
-
 const ArrowIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
 const CheckIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>;
 const HeartIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0112 7.2a4.3 4.3 0 017.5 2.6C19.5 15.4 12 20 12 20z" /></svg>;
+const CalendarIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg>;
 const BookIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z" /><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5" /></svg>;
 const UsersIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.6-3.4 3.2-5.5 6.5-5.5s5.9 2.1 6.5 5.5" /><path d="M16 4.8a3.5 3.5 0 010 6.4M18.5 14.8c1.6.8 2.7 2.6 3 5.2" /></svg>;
 const SparkIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6" /></svg>;
@@ -167,19 +206,45 @@ function useTransparentLogo(src: string) {
   return logo;
 }
 
+function SocialsStep() {
+  return (
+    <div className="ap-step">
+      <div className="ap-step-icon"><UsersIcon /></div>
+      <div>
+        <b>Follow us for free privacy career content</b>
+        <span>Practical tips, career advice and free resources to move you forward right now.</span>
+        <div className="ap-socials">
+          <a className="ap-social" href={socials.youtube} target="_blank" rel="noopener noreferrer"><YoutubeIcon /> YouTube</a>
+          <a className="ap-social" href={socials.linkedin} target="_blank" rel="noopener noreferrer"><LinkedinIcon /> LinkedIn</a>
+          <a className="ap-social" href={socials.instagram} target="_blank" rel="noopener noreferrer"><InstagramIcon /> Instagram</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const Signoff = () => <p className="ap-signoff">Rooting for you,<br />The Dataverse Team</p>;
+
+function notYetMessage(answers: Record<string, AnswerValue>) {
+  if (answers.funding === "find_way") return "It's clear you're serious about your growth, and it's wise to make sure the timing is right financially before you commit. The right season matters, and there's no rush.";
+  if (answers.funding === "cant_afford") return "Starting with free resources is a great way to build your foundation, and there's a lot you can learn before taking the next step.";
+  if (answers.start === "exploring") return "Taking time to weigh your options before you commit is a smart move. A decision this important deserves careful thought.";
+  if (answers.start === "3_6_months") return "Planning a few months ahead is a smart move. When your start date gets closer, we'd love to hear from you again.";
+  return "We appreciate you taking the time to share where you are right now.";
+}
+
 export function ApplicationForm() {
-  const [current, setCurrent] = useState(0); // 0..n-1 = questions, n = result
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [otherText, setOtherText] = useState("");
+  const [current, setCurrent] = useState(0); // 0..n-1 = steps, n = result
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [error, setError] = useState("");
   const [blinking, setBlinking] = useState<string | null>(null);
   const [leaving, setLeaving] = useState<number | null>(null);
   const advancing = useRef(false);
-  const otherInput = useRef<HTMLInputElement>(null);
   const screenRefs = useRef<(HTMLElement | null)[]>([]);
   const logo = useTransparentLogo("/sites/dataverse/dataverse-logo.webp");
 
-  const total = questions.length;
+  const total = steps.length;
   const onResult = current >= total;
 
   const go = useCallback((idx: number) => {
@@ -192,45 +257,43 @@ export function ApplicationForm() {
     setError("");
   }, [current, total]);
 
-  const finish = useCallback((final: Record<string, Answer>) => {
-    if (
-      qualifyingInvestment.includes(final.investment?.value)
-      && !disqualifyingTimeline.includes(final.timeline?.value)
-      && qualifyingLocations.includes(final.location?.value)
-    ) {
-      window.location.href = calendlyUrl;
-      return;
-    }
+  const end = useCallback((kind: Outcome) => {
+    setOutcome(kind);
     go(total);
   }, [go, total]);
 
-  const submit = useCallback((final: Record<string, Answer> = answers) => {
+  const submit = useCallback((final: Record<string, AnswerValue> = answers) => {
     if (current >= total) return;
-    const q = questions[current];
-    const answer = final[q.id];
-    if (!answer) { setError("Please select an option to continue."); return; }
-    let next = final;
-    if (answer.value === "other" && q.options.some(o => o.other)) {
-      const detail = otherText.trim();
-      if (!detail) { setError("Please tell us where you're located."); return; }
-      next = { ...final, [q.id]: { ...answer, detail } };
-      setAnswers(next);
-    }
-    if (current === total - 1) finish(next);
-    else go(current + 1);
-  }, [answers, current, finish, go, otherText, total]);
+    const step = steps[current];
+    const answer = final[step.id];
+    if (step.type === "single" && !answer) { setError("Please select an option to continue."); return; }
+    if (step.type === "multi" && !(Array.isArray(answer) && answer.length)) { setError("Please select at least one option."); return; }
+    if ((step.type === "text" || step.type === "textarea") && !(typeof answer === "string" && answer.trim())) { setError("Please fill this in to continue."); return; }
 
-  const pick = useCallback((q: Question, option: Option) => {
+    // Routing
+    if (step.id === "goal" && final.goal === "no") return end("not_fit");
+    if (step.id === "start" && !(qualifyingFunding.includes(final.funding as string) && qualifyingStart.includes(final.start as string))) return end("not_yet");
+    if (step.id === "location" && !qualifyingLocations.includes(final.location as string)) return end("outside_region");
+    if (step.id === "attend") {
+      if (final.attend === "yes") { window.location.href = calendlyUrl; return; }
+      return end("no_commit");
+    }
+    go(current + 1);
+  }, [answers, current, end, go, total]);
+
+  const pick = useCallback((step: Step, option: Option) => {
     if (advancing.current) return;
-    const next = { ...answers, [q.id]: { value: option.value } };
-    setAnswers(next);
     setError("");
+    if (step.type === "multi") {
+      const prev = Array.isArray(answers[step.id]) ? (answers[step.id] as string[]) : [];
+      const next = prev.includes(option.value) ? prev.filter(v => v !== option.value) : [...prev, option.value];
+      setAnswers({ ...answers, [step.id]: next });
+      return; // multi-select waits for OK
+    }
+    const next = { ...answers, [step.id]: option.value };
+    setAnswers(next);
     setBlinking(option.value);
     window.setTimeout(() => setBlinking(null), 700);
-    if (option.other) {
-      window.setTimeout(() => otherInput.current?.focus(), 120);
-      return; // wait for them to type
-    }
     // Typeform-style auto-advance
     advancing.current = true;
     window.setTimeout(() => { advancing.current = false; submit(next); }, 650);
@@ -239,11 +302,17 @@ export function ApplicationForm() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (current >= total) return;
-      if (e.key === "Enter") { e.preventDefault(); submit(); return; }
-      if ((e.target as HTMLElement).tagName === "INPUT") return;
-      const q = questions[current];
+      const tag = (e.target as HTMLElement).tagName;
+      if (e.key === "Enter") {
+        if (tag === "TEXTAREA" && e.shiftKey) return; // new line
+        e.preventDefault();
+        submit();
+        return;
+      }
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      const step = steps[current];
       const k = letters.indexOf(e.key.toUpperCase());
-      if (k >= 0 && k < q.options.length) pick(q, q.options[k]);
+      if (step.options && k >= 0 && k < step.options.length) pick(step, step.options[k]);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -255,18 +324,16 @@ export function ApplicationForm() {
     if (lastFocused.current === current) return;
     lastFocused.current = current;
     if (!window.matchMedia("(min-width: 601px)").matches) return;
-    const el = screenRefs.current[current]?.querySelector<HTMLElement>(".ap-choice.selected, .ap-choice, .ap-social");
+    const el = screenRefs.current[current]?.querySelector<HTMLElement>("[data-field], .ap-choice.selected, .ap-choice, .ap-social");
     const t = window.setTimeout(() => el?.focus({ preventScroll: true }), 300);
     return () => window.clearTimeout(t);
   }, [current]);
 
   const screenClass = (i: number) => `ap-screen${i === current ? " active" : ""}${i === leaving ? " leave-up" : ""}`;
-  const outsideRegion = onResult && !qualifyingLocations.includes(answers.location?.value);
-  const tailored = outsideRegion
-    ? "Thank you for your interest in growing your privacy career. Right now, our 90-day coaching program is only open to professionals based in the United States, Canada and Australia."
-    : tailoredMessages[answers.investment?.value ?? ""]
-    ?? (answers.timeline?.value === "exploring" ? tailoredMessages.exploring : undefined)
-    ?? "We appreciate you taking the time to share where you are right now.";
+  const isSelected = (step: Step, value: string) => {
+    const a = answers[step.id];
+    return Array.isArray(a) ? a.includes(value) : a === value;
+  };
 
   return (
     <div className="ap-root">
@@ -277,48 +344,78 @@ export function ApplicationForm() {
       </Link>
 
       <main className="ap-stage">
-        {questions.map((q, i) => {
-          const selected = answers[q.id]?.value;
+        {steps.map((step, i) => {
+          const isActive = i === current;
+          const tab = isActive ? 0 : -1;
           return (
-            <section key={q.id} className={screenClass(i)} ref={el => { screenRefs.current[i] = el; }} aria-hidden={i !== current}>
+            <section key={step.id} className={screenClass(i)} ref={el => { screenRefs.current[i] = el; }} aria-hidden={!isActive}>
               <div className="ap-inner">
                 <div className="ap-q-num">{i + 1} <ArrowIcon /></div>
-                <h2>{q.title}</h2>
-                {q.hint && <p className="ap-hint">{q.hint}</p>}
-                <div className="ap-choices">
-                  {q.options.map((o, k) => (
-                    <button
-                      key={o.value}
-                      type="button"
-                      tabIndex={i === current ? 0 : -1}
-                      className={`ap-choice${selected === o.value ? " selected" : ""}${i === current && blinking === o.value ? " blink" : ""}`}
-                      onClick={() => pick(q, o)}
-                    >
-                      <span className="ap-key">{letters[k]}</span>
-                      <span className="ap-choice-label">{o.label}</span>
-                      <span className="ap-check"><CheckIcon /></span>
-                    </button>
-                  ))}
-                </div>
-                {q.options.some(o => o.other) && selected === "other" && (
-                  <div className="ap-other">
+                {step.intro && (
+                  <div className="ap-intro">
+                    {step.intro.map((line, k) => typeof line === "string"
+                      ? <p key={k}>{line}</p>
+                      : <p key={k} className="ap-note">{line.note}</p>)}
+                  </div>
+                )}
+                <h2>{step.title}</h2>
+                {step.hint && <p className="ap-hint">{step.hint}</p>}
+
+                {step.options && (
+                  <div className="ap-choices">
+                    {step.options.map((o, k) => (
+                      <button
+                        key={o.value}
+                        type="button"
+                        tabIndex={tab}
+                        className={`ap-choice${isSelected(step, o.value) ? " selected" : ""}${isActive && blinking === o.value ? " blink" : ""}`}
+                        onClick={() => pick(step, o)}
+                      >
+                        <span className="ap-key">{letters[k]}</span>
+                        <span className="ap-choice-label">{o.label}</span>
+                        <span className="ap-check"><CheckIcon /></span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {step.type === "text" && (
+                  <div className="ap-field-wrap">
                     <input
-                      ref={otherInput}
+                      data-field
+                      tabIndex={tab}
                       className="ap-text-input"
                       type="text"
-                      placeholder="Please specify your country…"
-                      aria-label="Please specify your country"
-                      value={otherText}
-                      onChange={e => { setOtherText(e.target.value); setError(""); }}
+                      placeholder={step.placeholder}
+                      aria-label={step.title}
+                      value={(answers[step.id] as string) ?? ""}
+                      onChange={e => { setAnswers({ ...answers, [step.id]: e.target.value }); setError(""); }}
                     />
                   </div>
                 )}
-                <div className="ap-error" aria-live="polite">{i === current ? error : ""}</div>
+                {step.type === "textarea" && (
+                  <div className="ap-field-wrap">
+                    <textarea
+                      data-field
+                      tabIndex={tab}
+                      rows={3}
+                      className="ap-text-input ap-text-area"
+                      placeholder={step.placeholder}
+                      aria-label={step.title}
+                      value={(answers[step.id] as string) ?? ""}
+                      onChange={e => { setAnswers({ ...answers, [step.id]: e.target.value }); setError(""); }}
+                    />
+                  </div>
+                )}
+
+                <div className="ap-error" aria-live="polite">{isActive ? error : ""}</div>
                 <div className="ap-actions">
-                  <button type="button" className="ap-btn" tabIndex={i === current ? 0 : -1} onClick={() => submit()}>
+                  <button type="button" className="ap-btn" tabIndex={tab} onClick={() => submit()}>
                     {i === total - 1 ? "Submit" : "OK"} <CheckIcon />
                   </button>
-                  <span className="ap-enter-hint">press <b>Enter ↵</b></span>
+                  <span className="ap-enter-hint">
+                    press <b>Enter ↵</b>{step.type === "textarea" && <> · <b>Shift + Enter</b> for a new line</>}
+                  </span>
                 </div>
               </div>
             </section>
@@ -326,34 +423,64 @@ export function ApplicationForm() {
         })}
 
         <section className={`${screenClass(total)} ap-result`} ref={el => { screenRefs.current[total] = el; }} aria-hidden={!onResult}>
-          {onResult && (
+          {onResult && outcome === "not_fit" && (
+            <div className="ap-inner">
+              <div className="ap-badge"><HeartIcon /></div>
+              <div className="ap-eyebrow">Thank you for your interest</div>
+              <h1>Thanks for being honest with us.</h1>
+              <p>Our program is built for people who want hands-on Data Privacy experience so they can land a high-paying role. It sounds like that isn&apos;t what you&apos;re looking for right now, and that&apos;s completely okay.</p>
+              <p><strong>If your goals change, the door stays open.</strong></p>
+              <div className="ap-steps">
+                <SocialsStep />
+                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div><b>Come back any time</b><span>If you decide to pursue a Data Privacy role, you&apos;re always welcome to apply again.</span></div></div>
+              </div>
+              <Signoff />
+            </div>
+          )}
+
+          {onResult && outcome === "outside_region" && (
             <div className="ap-inner">
               <div className="ap-badge"><HeartIcon /></div>
               <div className="ap-eyebrow">Thank you for applying</div>
               <h1>Thank you. Your journey into privacy is just getting started.</h1>
-              <p>{tailored}</p>
-              {outsideRegion
-                ? <p>That means we can&apos;t offer you a strategy session at the moment, but it doesn&apos;t change what you&apos;re capable of. <strong>Your goals are valid, and the door stays open.</strong></p>
-                : <p>Our 90-day coaching program is an intensive, hands-on commitment, so we save our strategy sessions for people who are ready to start now. That isn&apos;t the right next step for you yet, and that&apos;s completely okay. <strong>Your goals are valid, and the door stays open.</strong></p>}
+              <p>Thank you for your interest in growing your privacy career. Right now, our program is only open to professionals based in the United States, Canada and Australia.</p>
+              <p>That means we can&apos;t offer you an admissions call at the moment, but it doesn&apos;t change what you&apos;re capable of. <strong>Your goals are valid, and the door stays open.</strong></p>
               <div className="ap-steps">
-                <div className="ap-step">
-                  <div className="ap-step-icon"><UsersIcon /></div>
-                  <div>
-                    <b>Follow us for free privacy career content</b>
-                    <span>Practical tips, career advice and free resources to move you forward right now.</span>
-                    <div className="ap-socials">
-                      <a className="ap-social" href={socials.youtube} target="_blank" rel="noopener noreferrer"><YoutubeIcon /> YouTube</a>
-                      <a className="ap-social" href={socials.linkedin} target="_blank" rel="noopener noreferrer"><LinkedinIcon /> LinkedIn</a>
-                      <a className="ap-social" href={socials.instagram} target="_blank" rel="noopener noreferrer"><InstagramIcon /> Instagram</a>
-                    </div>
-                  </div>
-                </div>
-                <div className="ap-step"><div className="ap-step-icon"><BookIcon /></div><div><b>Keep building momentum</b><span>Look out for our free webinars and content. They&apos;re designed to move you forward right now.</span></div></div>
-                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div>{outsideRegion
-                  ? <><b>Come back when we&apos;re in your region</b><span>If we open the program to your country, or you move to one of these countries, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></>
-                  : <><b>Come back when you&apos;re ready</b><span>When the timing is right, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></>}</div></div>
+                <SocialsStep />
+                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div><b>Come back when we&apos;re in your region</b><span>If we open the program to your country, or you move to one of these countries, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></div></div>
               </div>
-              <p className="ap-signoff">Rooting for you,<br />The Dataverse Team</p>
+              <Signoff />
+            </div>
+          )}
+
+          {onResult && outcome === "no_commit" && (
+            <div className="ap-inner">
+              <div className="ap-badge"><CalendarIcon /></div>
+              <div className="ap-eyebrow">No problem</div>
+              <h1>Book when you know you can be there.</h1>
+              <p>Our consultants set aside dedicated time for every admissions call, so we only book calls that people are sure they can attend.</p>
+              <p>When you&apos;re ready to commit to a time, come back and we&apos;ll get you booked in. <strong>We&apos;d be glad to hear from you.</strong></p>
+              <div className="ap-actions">
+                <button type="button" className="ap-btn ap-btn-ghost" onClick={() => go(total - 1)}>I can make it after all</button>
+              </div>
+              <div className="ap-steps"><SocialsStep /></div>
+              <Signoff />
+            </div>
+          )}
+
+          {onResult && outcome === "not_yet" && (
+            <div className="ap-inner">
+              <div className="ap-badge"><HeartIcon /></div>
+              <div className="ap-eyebrow">Thank you for applying</div>
+              <h1>Thank you. Your journey into privacy is just getting started.</h1>
+              <p>{notYetMessage(answers)}</p>
+              <p>Our program is an intensive, hands-on commitment, so we save our admissions calls for people who are ready to start now. That isn&apos;t the right next step for you yet, and that&apos;s completely okay. <strong>Your goals are valid, and the door stays open.</strong></p>
+              <div className="ap-steps">
+                <SocialsStep />
+                <div className="ap-step"><div className="ap-step-icon"><BookIcon /></div><div><b>Keep building momentum</b><span>Look out for our free webinars and content. They&apos;re designed to move you forward right now.</span></div></div>
+                <div className="ap-step"><div className="ap-step-icon"><SparkIcon /></div><div><b>Come back when you&apos;re ready</b><span>When the timing is right, you&apos;re always welcome to apply again. We&apos;d be glad to hear from you.</span></div></div>
+              </div>
+              <Signoff />
             </div>
           )}
         </section>

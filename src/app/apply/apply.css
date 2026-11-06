@@ -89,13 +89,22 @@
 .ap-choice.blink { animation: ap-blink .32s ease 2; }
 @keyframes ap-blink { 50% { background: rgba(124,58,237,.22); } }
 
-.ap-other { margin-top: 24px; animation: ap-fade .3s ease; }
+.ap-intro { margin-bottom: 22px; display: grid; gap: 12px; max-width: 600px; }
+.ap-intro p { color: var(--ap-ink-soft); font-size: 17px; line-height: 1.65; margin: 0; }
+.ap-intro p.ap-note {
+  color: var(--ap-ink); font-weight: 600;
+  padding: 12px 14px; border-left: 3px solid var(--ap-accent);
+  background: var(--ap-choice-bg); border-radius: 0 8px 8px 0;
+}
+
+.ap-field-wrap { margin-top: 30px; }
 .ap-text-input {
   width: 100%; max-width: 560px;
   background: transparent; border: none; border-bottom: 2px solid var(--ap-line);
   color: var(--ap-ink); font: inherit; font-size: 22px; padding: 10px 2px;
   transition: border-color .2s;
 }
+.ap-text-area { display: block; resize: none; min-height: 96px; line-height: 1.45; }
 .ap-text-input::placeholder { color: var(--ap-ink-faint); }
 .ap-text-input:focus { outline: none; border-color: var(--ap-accent); }
 @keyframes ap-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -114,6 +123,8 @@
 .ap-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .ap-btn:focus-visible { outline: 2px solid var(--ap-ink); outline-offset: 3px; }
 .ap-btn svg { width: 16px; height: 16px; }
+.ap-btn-ghost { background: #fff; color: var(--ap-ink); border: 1px solid var(--ap-line); box-shadow: none; }
+.ap-btn-ghost:hover { border-color: var(--ap-accent); color: var(--ap-accent); }
 .ap-enter-hint { color: var(--ap-ink-faint); font-size: 13px; }
 .ap-enter-hint b { color: var(--ap-ink-soft); font-weight: 600; }
 .ap-error { color: #c62828; font-size: 14px; margin-top: 14px; min-height: 20px; }
@@ -172,6 +183,7 @@
   .ap-brand img { height: 32px; }
   .ap-screen { padding: 76px 16px 96px; align-items: flex-start; }
   .ap-choice { font-size: 16px; padding: 12px 14px; }
+  .ap-text-input { font-size: 19px; }
   .ap-nav { right: 16px; bottom: 16px; }
   .ap-enter-hint { display: none; }
 }
