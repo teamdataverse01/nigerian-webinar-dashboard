@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 
-const metaPixelId = "1727754728465550";
+const metaPixelId = "1790758781692165";
 
 export const metadata: Metadata = {
   title: "Land a $120K+ Data Privacy Job | DataVerse Solutions",
