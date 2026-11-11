@@ -4,7 +4,29 @@ import Script from "next/script";
 import { useEffect } from "react";
 
 const masterclassCalendlyUrl = "https://calendly.com/data-privacy_beginner_01/transition-to-privacy-privacy-career-no-coding-or-startingover?primary_color=8c00ff";
-const bookAnchor = "#book-masterclass";
+
+declare global {
+  interface Window { Calendly?: { initPopupWidget: (options: { url: string }) => void } }
+}
+
+/** Opens the masterclass calendar as a pop-up where the visitor is; falls back to a new tab if Calendly hasn't loaded. */
+function RegisterLink({ className, children }: { className: string; children: React.ReactNode }) {
+  return (
+    <a
+      className={className}
+      href={masterclassCalendlyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        if (!window.Calendly) return;
+        e.preventDefault();
+        window.Calendly.initPopupWidget({ url: masterclassCalendlyUrl });
+      }}
+    >
+      {children}
+    </a>
+  );
+}
 
 const learningPoints = [
   "The Background Mapping Matrix: Know precisely which high-paying Privacy roles to target based on your specific professional history (so you never waste time applying blindly).",
@@ -69,7 +91,7 @@ export default function Home() {
 
             <div className="cta-block" id="hero-cta">
               <StrategyButton />
-              <a className="cta" href={bookAnchor}><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></a>
+              <RegisterLink className="cta"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></RegisterLink>
             </div>
           </div>
         </section>
@@ -154,7 +176,7 @@ export default function Home() {
             <h2 className="reveal">Get a <span className="hl">Customized 1:1 Plan</span></h2>
             <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy job.</p>
             <div className="reveal"><StrategyButton label="Schedule Your Private 1:1 Strategy Call Now" /></div>
-            <a className="ghost-link reveal" href={bookAnchor}>🎟 Register for the free live webinar →</a>
+            <RegisterLink className="ghost-link reveal">🎟 Register for the free live webinar →</RegisterLink>
           </div>
         </section>
       </main>
@@ -164,7 +186,7 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Pick a date that works for you · 100% free</span></div><a href={bookAnchor}>Register</a></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Pick a date that works for you · 100% free</span></div><RegisterLink className="sticky-register">Register</RegisterLink></div>
     </>
   );
 }
