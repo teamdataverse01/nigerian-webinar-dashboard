@@ -1,37 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Script from "next/script";
+import { useEffect } from "react";
 
-const seatUrl = "https://calendly.com/d/dv7s-hyb-7mt";
-const webinarDate = new Date("2026-11-07T12:00:00-05:00").getTime();
-
-function useCountdown() {
-  const [remaining, setRemaining] = useState(0);
-
-  useEffect(() => {
-    const updateCountdown = () => setRemaining(Math.max(0, webinarDate - Date.now()));
-    updateCountdown();
-    const timer = window.setInterval(updateCountdown, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const days = Math.floor(remaining / 86_400_000);
-  const hours = Math.floor((remaining % 86_400_000) / 3_600_000);
-  const minutes = Math.floor((remaining % 3_600_000) / 60_000);
-  const seconds = Math.floor((remaining % 60_000) / 1000);
-  return { days, hours, minutes, seconds };
-}
-
-function SeatButton({ final = false }: { final?: boolean }) {
-  return (
-    <div className="cta-block">
-      <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer">
-        <span className="cta-main">{final ? "Save My Free Webinar Seat Now" : "Register for the Free Live Masterclass"} <span aria-hidden="true">→</span></span>
-      </a>
-      {final ? <p className="cta-note">No replay will be available. Show up live.</p> : null}
-    </div>
-  );
-}
+const masterclassCalendlyUrl = "https://calendly.com/data-privacy_beginner_01/transition-to-privacy-privacy-career-no-coding-or-startingover?primary_color=8c00ff";
+const bookAnchor = "#book-masterclass";
 
 const learningPoints = [
   "The Background Mapping Matrix: Know precisely which high-paying Privacy roles to target based on your specific professional history (so you never waste time applying blindly).",
@@ -53,8 +26,6 @@ function StrategyButton({ label = "Book a Free 1:1 Career Strategy Call With Tem
 }
 
 export default function Home() {
-  const countdown = useCountdown();
-
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
     const observer = new IntersectionObserver((entries) => {
@@ -94,17 +65,11 @@ export default function Home() {
 
             <div className="hero-media">
               <img src="/sites/dataverse/temifirst-optimized.webp" alt="Temi, host of the DataVerse masterclass" fetchPriority="high" decoding="async" />
-              <div className="hero-countdown">
-                <p className="countdown-label">Webinar starts in:</p>
-                <div className="countdown">
-                  {Object.entries(countdown).map(([unit, value]) => <div key={unit}><strong>{String(value).padStart(2, "0")}</strong><span>{unit}</span></div>)}
-                </div>
-              </div>
             </div>
 
             <div className="cta-block" id="hero-cta">
               <StrategyButton />
-              <a className="cta" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></a>
+              <a className="cta" href={bookAnchor}><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></a>
             </div>
           </div>
         </section>
@@ -159,14 +124,14 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section section-glow">
+        <section className="section section-glow" id="book-masterclass">
           <div className="wrap center narrow">
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Prefer to join a group session first? Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
-            <p className="countdown-label training-countdown-label">Webinar starts in · Saturday, November 7th · 12:00 PM Eastern Time, 9:00 AM Pacific Time</p>
-            <div className="countdown training-countdown">{Object.entries(countdown).map(([unit, value]) => <div key={unit}><strong>{String(value).padStart(2, "0")}</strong><span>{unit}</span></div>)}</div>
-            <a className="cta reveal" href={seatUrl} target="_blank" rel="noopener noreferrer"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></a>
+            <p className="countdown-label training-countdown-label">🎟 Pick a date below to save your free seat · Limited spots available · 100% free</p>
+            <div className="calendly-inline-widget calendly-embed" data-url={masterclassCalendlyUrl} />
+            <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="afterInteractive" />
           </div>
         </section>
 
@@ -183,22 +148,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section final">
-          <div className="wrap center narrow">
-            <p className="pill reveal">Event details</p>
-            <h2 className="reveal">Join the Free Live Training</h2>
-            <dl className="event-facts reveal"><div><dt>Date</dt><dd>Saturday, November 7th</dd></div><div><dt>Time</dt><dd>12:00 PM Eastern Time, 9:00 AM Pacific Time</dd></div><div><dt>Cost</dt><dd>100% Free</dd></div></dl>
-            <div className="reveal"><SeatButton final /></div>
-          </div>
-        </section>
-
         <section className="section">
           <div className="wrap center narrow">
             <p className="pill reveal">Want to skip the wait and get a customized 1:1 plan?</p>
             <h2 className="reveal">Get a <span className="hl">Customized 1:1 Plan</span></h2>
             <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy job.</p>
             <div className="reveal"><StrategyButton label="Schedule Your Private 1:1 Strategy Call Now" /></div>
-            <a className="ghost-link reveal" href={seatUrl} target="_blank" rel="noopener noreferrer">🎟 Register for the free live webinar →</a>
+            <a className="ghost-link reveal" href={bookAnchor}>🎟 Register for the free live webinar →</a>
           </div>
         </section>
       </main>
@@ -208,7 +164,7 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Sat, Nov 7 · 12:00 PM Eastern Time, 9:00 AM Pacific Time</span></div><a href={seatUrl} target="_blank" rel="noopener noreferrer">Register</a></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Pick a date that works for you · 100% free</span></div><a href={bookAnchor}>Register</a></div>
     </>
   );
 }

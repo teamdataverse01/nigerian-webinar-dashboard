@@ -132,6 +132,8 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
 .event-facts dt { color: var(--faint); font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
 .event-facts dd { margin: 6px 0 0; font: 700 18px/1.3 var(--display); }
 .training-countdown-label { margin: 32px 0 10px; }
+.calendly-embed { width: 100%; min-width: 320px; height: 700px; margin-top: 8px; border-radius: 20px; overflow: hidden; background: #fff; border: 1px solid var(--line); }
+#book-masterclass { scroll-margin-top: 72px; }
 
 /* Footer */
 .footer { padding: 48px 0 56px; border-top: 1px solid var(--line); color: var(--faint); font-size: 12px; }
