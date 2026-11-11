@@ -43,9 +43,6 @@ const testimonials = [
   { metric: "First remote privacy role", context: "Pharmacist (20 Yrs Experience) → Senior Remote Data Privacy Professional", image: "image4-thumb.webp", alt: "Distinguished African man in his late 40s working in a bright modern home office", quote: "“After 20 years as a pharmacist, I wanted out of the grind. Temi’s framework helped me secure my very first remote Data Privacy position as a Senior Professional.”", name: "Pharmacist (20 Yrs Experience)", role: "Senior Remote Data Privacy Professional" },
 ];
 
-function StrategyButton({ label = "Book a Free 1:1 Career Strategy Call With Temi" }: { label?: string }) {
-  return <a className="cta strategy-cta" href="/apply" target="_blank" rel="noopener noreferrer"><span className="cta-main">📞 {label} <span aria-hidden="true">→</span></span></a>;
-}
 
 export default function Home() {
   useEffect(() => {
@@ -90,7 +87,6 @@ export default function Home() {
             </div>
 
             <div className="cta-block" id="hero-cta">
-              <StrategyButton />
               <RegisterLink className="cta"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></RegisterLink>
             </div>
           </div>
@@ -150,9 +146,8 @@ export default function Home() {
           <div className="wrap center narrow">
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
-            <p className="lede reveal">Prefer to join a group session first? Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
-            <p className="countdown-label training-countdown-label">🎟 Pick a date below to save your free seat · Limited spots available · 100% free</p>
-            <div className="calendly-inline-widget calendly-embed" data-url={masterclassCalendlyUrl} />
+            <p className="lede reveal">Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
+            <RegisterLink className="cta reveal"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></RegisterLink>
             <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="afterInteractive" />
           </div>
         </section>
@@ -170,15 +165,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section">
-          <div className="wrap center narrow">
-            <p className="pill reveal">Want to skip the wait and get a customized 1:1 plan?</p>
-            <h2 className="reveal">Get a <span className="hl">Customized 1:1 Plan</span></h2>
-            <p className="lede reveal">Don’t wait for the webinar if you’re ready to make your move now. Schedule a 30-minute private 1:1 Career Audit &amp; Strategy Call directly with Temi to evaluate your current background, pinpoint your target role, and map out your fastest path to a $120K+ Data Privacy job.</p>
-            <div className="reveal"><StrategyButton label="Schedule Your Private 1:1 Strategy Call Now" /></div>
-            <RegisterLink className="ghost-link reveal">🎟 Register for the free live webinar →</RegisterLink>
-          </div>
-        </section>
       </main>
 
       <footer className="footer"><div className="wrap center">
