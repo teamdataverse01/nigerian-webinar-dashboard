@@ -1,7 +1,6 @@
 declare global {
   interface Window {
     Calendly?: { initPopupWidget: (options: { url: string }) => void };
-    fbq?: (...args: unknown[]) => void;
   }
 }
 
@@ -22,9 +21,4 @@ export function onCalendlyScheduled(onScheduled: () => void) {
   };
   window.addEventListener("message", handler);
   return () => window.removeEventListener("message", handler);
-}
-
-/** Sends a standard Meta Pixel event, if the pixel has loaded. */
-export function trackPixel(event: "CompleteRegistration" | "Schedule") {
-  window.fbq?.("track", event);
 }

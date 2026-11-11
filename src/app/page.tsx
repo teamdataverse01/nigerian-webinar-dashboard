@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
-import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup, trackPixel } from "@/lib/calendly";
+import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup } from "@/lib/calendly";
+import { trackConversion } from "@/lib/meta";
 
 const masterclassCalendlyUrl = "https://calendly.com/data-privacy_beginner_01/transition-to-privacy-privacy-career-no-coding-or-startingover?primary_color=8c00ff";
 // If the Calendly event is set to redirect (with event details) the browser goes there itself; this is the fallback.
@@ -66,7 +67,7 @@ export default function Home() {
 
     let redirectTimer: number | undefined;
     const stopListening = onCalendlyScheduled(() => {
-      trackPixel("CompleteRegistration");
+      trackConversion("CompleteRegistration");
       redirectTimer = window.setTimeout(() => router.push("/thank-you"), thankYouFallbackDelayMs);
     });
     return () => {

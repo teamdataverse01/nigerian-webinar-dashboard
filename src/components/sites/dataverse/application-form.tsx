@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup, trackPixel } from "@/lib/calendly";
+import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup } from "@/lib/calendly";
+import { trackConversion } from "@/lib/meta";
 
 const calendlyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const qualifyingFunding = ["funds_ready", "payment_plan"];
@@ -246,7 +247,7 @@ export function ApplicationForm() {
   const screenRefs = useRef<(HTMLElement | null)[]>([]);
   const logo = useTransparentLogo("/sites/dataverse/dataverse-logo.webp");
 
-  useEffect(() => onCalendlyScheduled(() => trackPixel("Schedule")), []);
+  useEffect(() => onCalendlyScheduled(() => trackConversion("Schedule")), []);
 
   const total = steps.length;
   const onResult = current >= total;

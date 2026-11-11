@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { metaPixelId, metaTestStorageKey } from "@/lib/meta";
 import "./globals.css";
-
-const metaPixelId = "1687140503016546";
 
 export const metadata: Metadata = {
   title: "Land a $120K+ Data Privacy Job | DataVerse Solutions",
@@ -30,7 +29,25 @@ export default function RootLayout({
           s.parentNode.insertBefore(t,s)}(window,document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
           fbq('init', '${metaPixelId}');
-          fbq('track', 'PageView');`}
+          (function () {
+            var testCode;
+            try {
+              var fromUrl = new URLSearchParams(location.search).get('${metaTestStorageKey}');
+              if (fromUrl) sessionStorage.setItem('${metaTestStorageKey}', fromUrl);
+              testCode = sessionStorage.getItem('${metaTestStorageKey}') || undefined;
+            } catch (e) {}
+            var eventId = crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2);
+            fbq('track', 'PageView', {}, { eventID: eventId });
+            // Server copy for the Conversions API; the delay lets the pixel set its _fbp cookie first.
+            setTimeout(function () {
+              fetch('/api/meta-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                keepalive: true,
+                body: JSON.stringify({ event_name: 'PageView', event_id: eventId, event_source_url: location.href, test_event_code: testCode })
+              }).catch(function () {});
+            }, 1000);
+          })();`}
         </Script>
         <noscript>
           <img
