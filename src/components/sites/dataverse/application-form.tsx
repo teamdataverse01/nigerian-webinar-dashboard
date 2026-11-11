@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup, trackPixel } from "@/lib/calendly";
 
 const calendlyUrl = "https://calendly.com/data-privacy_beginner_01/30min";
 const qualifyingFunding = ["funds_ready", "payment_plan"];
@@ -244,6 +246,8 @@ export function ApplicationForm() {
   const screenRefs = useRef<(HTMLElement | null)[]>([]);
   const logo = useTransparentLogo("/sites/dataverse/dataverse-logo.webp");
 
+  useEffect(() => onCalendlyScheduled(() => trackPixel("Schedule")), []);
+
   const total = steps.length;
   const onResult = current >= total;
 
@@ -275,7 +279,11 @@ export function ApplicationForm() {
     if (step.id === "start" && !(qualifyingFunding.includes(final.funding as string) && qualifyingStart.includes(final.start as string))) return end("not_yet");
     if (step.id === "location" && !qualifyingLocations.includes(final.location as string)) return end("outside_region");
     if (step.id === "attend") {
-      if (final.attend === "yes") { window.location.href = calendlyUrl; return; }
+      if (final.attend === "yes") {
+        // Book on this page so the completed booking can be tracked; go to Calendly directly if its script hasn't loaded.
+        if (!openCalendlyPopup(calendlyUrl)) window.location.href = calendlyUrl;
+        return;
+      }
       return end("no_commit");
     }
     go(current + 1);
@@ -337,6 +345,7 @@ export function ApplicationForm() {
 
   return (
     <div className="ap-root">
+      <Script src={calendlyScriptUrl} strategy="afterInteractive" />
       <div className="ap-progress"><div className="ap-progress-fill" style={{ width: `${(Math.min(current, total) / total) * 100}%` }} /></div>
       <Link className="ap-brand" href="/" aria-label="DataVerse Solutions home">
         {/* eslint-disable-next-line @next/next/no-img-element -- processed data URL */}

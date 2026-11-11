@@ -1,13 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
+import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup, trackPixel } from "@/lib/calendly";
 
 const masterclassCalendlyUrl = "https://calendly.com/data-privacy_beginner_01/transition-to-privacy-privacy-career-no-coding-or-startingover?primary_color=8c00ff";
-
-declare global {
-  interface Window { Calendly?: { initPopupWidget: (options: { url: string }) => void } }
-}
+// If the Calendly event is set to redirect (with event details) the browser goes there itself; this is the fallback.
+const thankYouFallbackDelayMs = 2500;
 
 /** Opens the masterclass calendar as a pop-up where the visitor is; falls back to a new tab if Calendly hasn't loaded. */
 function RegisterLink({ className, children }: { className: string; children: React.ReactNode }) {
@@ -18,9 +18,7 @@ function RegisterLink({ className, children }: { className: string; children: Re
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => {
-        if (!window.Calendly) return;
-        e.preventDefault();
-        window.Calendly.initPopupWidget({ url: masterclassCalendlyUrl });
+        if (openCalendlyPopup(masterclassCalendlyUrl)) e.preventDefault();
       }}
     >
       {children}
@@ -45,6 +43,8 @@ const testimonials = [
 
 
 export default function Home() {
+  const router = useRouter();
+
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
     const observer = new IntersectionObserver((entries) => {
@@ -62,11 +62,19 @@ export default function Home() {
     const updateStickyBar = () => stickyBar?.classList.toggle("show", (heroCta?.getBoundingClientRect().bottom ?? 0) < 0);
     window.addEventListener("scroll", updateStickyBar, { passive: true });
     updateStickyBar();
+
+    let redirectTimer: number | undefined;
+    const stopListening = onCalendlyScheduled(() => {
+      trackPixel("CompleteRegistration");
+      redirectTimer = window.setTimeout(() => router.push("/thank-you"), thankYouFallbackDelayMs);
+    });
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", updateStickyBar);
+      stopListening();
+      window.clearTimeout(redirectTimer);
     };
-  }, []);
+  }, [router]);
 
   return (
     <>
@@ -148,7 +156,7 @@ export default function Home() {
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
             <RegisterLink className="cta reveal"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></RegisterLink>
-            <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="afterInteractive" />
+            <Script src={calendlyScriptUrl} strategy="afterInteractive" />
           </div>
         </section>
 
