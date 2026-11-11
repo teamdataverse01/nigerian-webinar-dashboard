@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
@@ -173,6 +174,13 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="section">
+          <div className="wrap center narrow">
+            <h2 className="reveal">Prefer a <span className="hl">1:1 Session</span>?</h2>
+            <p className="lede reveal">Book a free career strategy call with Temi and her team to map out your pathway into data privacy.</p>
+            <Link className="ghost-link reveal" href="/apply">📞 Book My Free Career Strategy Call →</Link>
+          </div>
+        </section>
       </main>
 
       <footer className="footer"><div className="wrap center">
