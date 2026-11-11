@@ -1,31 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Script from "next/script";
-import { useEffect } from "react";
-import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup } from "@/lib/calendly";
-import { trackConversion } from "@/lib/meta";
+import { useCallback, useEffect, useState } from "react";
+import { RegisterModal } from "@/components/sites/dataverse/register-modal";
 
-const masterclassCalendlyUrl = "https://calendly.com/data-privacy_beginner_01/transition-to-privacy-privacy-career-no-coding-or-startingover?primary_color=8c00ff";
-// If the Calendly event is set to redirect (with event details) the browser goes there itself; this is the fallback.
-const thankYouFallbackDelayMs = 2500;
-
-/** Opens the masterclass calendar as a pop-up where the visitor is; falls back to a new tab if Calendly hasn't loaded. */
-function RegisterLink({ className, children }: { className: string; children: React.ReactNode }) {
-  return (
-    <a
-      className={className}
-      href={masterclassCalendlyUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={(e) => {
-        if (openCalendlyPopup(masterclassCalendlyUrl)) e.preventDefault();
-      }}
-    >
-      {children}
-    </a>
-  );
+/** Opens the webinar registration pop-up where the visitor is. */
+function RegisterButton({ className, onClick, children }: { className: string; onClick: () => void; children: React.ReactNode }) {
+  return <button type="button" className={className} onClick={onClick}>{children}</button>;
 }
 
 const learningPoints = [
@@ -45,7 +26,9 @@ const testimonials = [
 
 
 export default function Home() {
-  const router = useRouter();
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const openRegister = useCallback(() => setRegisterOpen(true), []);
+  const closeRegister = useCallback(() => setRegisterOpen(false), []);
 
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
@@ -64,19 +47,11 @@ export default function Home() {
     const updateStickyBar = () => stickyBar?.classList.toggle("show", (heroCta?.getBoundingClientRect().bottom ?? 0) < 0);
     window.addEventListener("scroll", updateStickyBar, { passive: true });
     updateStickyBar();
-
-    let redirectTimer: number | undefined;
-    const stopListening = onCalendlyScheduled(() => {
-      trackConversion("CompleteRegistration");
-      redirectTimer = window.setTimeout(() => router.push("/thank-you"), thankYouFallbackDelayMs);
-    });
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", updateStickyBar);
-      stopListening();
-      window.clearTimeout(redirectTimer);
     };
-  }, [router]);
+  }, []);
 
   return (
     <>
@@ -97,7 +72,7 @@ export default function Home() {
             </div>
 
             <div className="cta-block" id="hero-cta">
-              <RegisterLink className="cta"><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></RegisterLink>
+              <RegisterButton className="cta" onClick={openRegister}><span className="cta-main">Register for the Free Live Masterclass <span aria-hidden="true">→</span></span></RegisterButton>
             </div>
           </div>
         </section>
@@ -157,8 +132,7 @@ export default function Home() {
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
-            <RegisterLink className="cta reveal"><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></RegisterLink>
-            <Script src={calendlyScriptUrl} strategy="afterInteractive" />
+            <RegisterButton className="cta reveal" onClick={openRegister}><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></RegisterButton>
           </div>
         </section>
 
@@ -189,7 +163,9 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Pick a date that works for you · 100% free</span></div><RegisterLink className="sticky-register">Register</RegisterLink></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Save your free seat · 100% free</span></div><RegisterButton className="sticky-register" onClick={openRegister}>Register</RegisterButton></div>
+
+      <RegisterModal open={registerOpen} onClose={closeRegister} />
     </>
   );
 }

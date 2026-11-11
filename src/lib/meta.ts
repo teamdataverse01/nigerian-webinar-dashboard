@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-function testEventCode() {
+export function testEventCode() {
   try {
     return sessionStorage.getItem(metaTestStorageKey) ?? undefined;
   } catch {
@@ -17,10 +17,15 @@ function testEventCode() {
   }
 }
 
+/** Fires a standard event on the browser pixel under the given ID, so Meta can pair it with the server copy. */
+export function firePixelEvent(event: "CompleteRegistration" | "Schedule", eventId: string) {
+  window.fbq?.("track", event, {}, { eventID: eventId });
+}
+
 /** Sends a standard event to the Meta Pixel and, with the same event ID, to the Conversions API via our server. */
 export function trackConversion(event: "CompleteRegistration" | "Schedule") {
   const eventId = crypto.randomUUID();
-  window.fbq?.("track", event, {}, { eventID: eventId });
+  firePixelEvent(event, eventId);
   fetch("/api/meta-event", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

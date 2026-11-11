@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const defaultEventTitle = "Free Data Privacy Career Masterclass – DataVerse Solutions";
-const calendarDetails = "Free live masterclass with Temi and DataVerse Solutions. Your join link is in your Calendly confirmation email.";
+const calendarDetails = "Free live masterclass with Temi and DataVerse Solutions. Your join link will be sent to your email.";
 const whatsappUrl = "https://chat.whatsapp.com/EQGgwCtcU1k5M3GOTYByij?s=cl&p=i&ilr=4&iam=2";
 const defaultDurationMs = 60 * 60 * 1000;
 
@@ -86,8 +86,8 @@ export function ThankYou() {
               <p className="ty-label">Free Live Masterclass</p>
               {hasDate
                 ? <p className="ty-when">{formatWhen(registration!.start!)}</p>
-                : <p className="ty-when ty-when-pending">Your date, time and join link are in your confirmation email.</p>}
-              <p className="ty-note">Check your inbox (and spam folder) for your confirmation and join link.</p>
+                : <p className="ty-when ty-when-pending">We&apos;ll send the date, time and join link to your email.</p>}
+              <p className="ty-note">Keep an eye on your inbox (and spam folder) for your join link.</p>
 
               {hasDate && (
                 <div className="ty-calendar">
