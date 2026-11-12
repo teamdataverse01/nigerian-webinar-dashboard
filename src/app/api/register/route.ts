@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { sendConfirmationEmail } from "@/lib/confirmation-email";
 import { hashForMeta, sendMetaEvent } from "@/lib/meta-server";
 
 // Webinar registration: appends the registrant to the Google Sheet (through the
@@ -69,8 +70,10 @@ export async function POST(request: NextRequest) {
     return Response.json({ ok: false, error: "We couldn't save your registration. Please try again." }, { status: 502 });
   }
 
-  // A Meta failure shouldn't lose the registration, which is already saved.
-  await sendMetaEvent(request, {
+  // The registration is already saved, so email or Meta failures are logged rather than shown to the visitor.
+  const confirmation = sendConfirmationEmail({ email, firstName, lastName })
+    .catch((e) => console.error("Brevo confirmation email error", e));
+  const metaEvent = sendMetaEvent(request, {
     eventName: "CompleteRegistration",
     eventId,
     eventSourceUrl: clean(body.page_url, 1000),
@@ -83,6 +86,7 @@ export async function POST(request: NextRequest) {
       country: [hashForMeta(country)],
     },
   }).catch((e) => console.error("Meta Conversions API error", e));
+  await Promise.all([confirmation, metaEvent]);
 
   return Response.json({ ok: true });
 }

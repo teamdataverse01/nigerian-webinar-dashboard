@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { webinarEnd, webinarStart } from "@/lib/webinar";
+import { webinarEnd, webinarJoinUrl, webinarMeetingId, webinarPasscode, webinarStart, whatsappCommunityUrl } from "@/lib/webinar";
 
 const eventTitle = "Free Data Privacy Career Masterclass – DataVerse Solutions";
-const calendarDetails = "Free live masterclass with Temi and DataVerse Solutions. Your join link will be sent to your email.";
-const whatsappUrl = "https://chat.whatsapp.com/EQGgwCtcU1k5M3GOTYByij?s=cl&p=i&ilr=4&iam=2";
+const calendarDetails = `Free live masterclass with Temi and DataVerse Solutions.
+Join on Zoom: ${webinarJoinUrl}
+Meeting ID: ${webinarMeetingId}
+Passcode: ${webinarPasscode}`;
+const whatsappUrl = whatsappCommunityUrl;
 
 type Registration = { firstName: string; title: string; start: Date | null; end: Date | null };
 
@@ -33,7 +36,10 @@ function downloadIcs(r: Registration) {
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//DataVerse Solutions//Masterclass//EN", "BEGIN:VEVENT",
     `UID:${utcStamp(r.start!)}-masterclass@dataverse`, `DTSTAMP:${utcStamp(new Date())}`,
     `DTSTART:${utcStamp(r.start!)}`, `DTEND:${utcStamp(r.end!)}`,
-    `SUMMARY:${r.title}`, `DESCRIPTION:${calendarDetails}`,
+    `SUMMARY:${r.title}`,
+    // iCalendar text needs escaped newlines, commas and semicolons.
+    `DESCRIPTION:${calendarDetails.replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n")}`,
+    `LOCATION:${webinarJoinUrl}`,
     "END:VEVENT", "END:VCALENDAR",
   ].join("\r\n");
   const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
