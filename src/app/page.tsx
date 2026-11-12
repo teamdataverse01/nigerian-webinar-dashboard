@@ -3,6 +3,28 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { RegisterModal } from "@/components/sites/dataverse/register-modal";
+import { webinarDateLong, webinarDateShort, webinarStart, webinarTimeText } from "@/lib/webinar";
+
+function useCountdown() {
+  const [remaining, setRemaining] = useState(0);
+
+  useEffect(() => {
+    const updateCountdown = () => setRemaining(Math.max(0, webinarStart.getTime() - Date.now()));
+    updateCountdown();
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const days = Math.floor(remaining / 86_400_000);
+  const hours = Math.floor((remaining % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((remaining % 3_600_000) / 60_000);
+  const seconds = Math.floor((remaining % 60_000) / 1000);
+  return { days, hours, minutes, seconds };
+}
+
+function Countdown({ className, values }: { className: string; values: ReturnType<typeof useCountdown> }) {
+  return <div className={className}>{Object.entries(values).map(([unit, value]) => <div key={unit}><strong>{String(value).padStart(2, "0")}</strong><span>{unit}</span></div>)}</div>;
+}
 
 /** Opens the webinar registration pop-up where the visitor is. */
 function RegisterButton({ className, onClick, children }: { className: string; onClick: () => void; children: React.ReactNode }) {
@@ -26,6 +48,7 @@ const testimonials = [
 
 
 export default function Home() {
+  const countdown = useCountdown();
   const [registerOpen, setRegisterOpen] = useState(false);
   const openRegister = useCallback(() => setRegisterOpen(true), []);
   const closeRegister = useCallback(() => setRegisterOpen(false), []);
@@ -69,6 +92,10 @@ export default function Home() {
 
             <div className="hero-media">
               <img src="/sites/dataverse/temifirst-optimized.webp" alt="Temi, host of the DataVerse masterclass" fetchPriority="high" decoding="async" />
+              <div className="hero-countdown">
+                <p className="countdown-label">Webinar starts in:</p>
+                <Countdown className="countdown" values={countdown} />
+              </div>
             </div>
 
             <div className="cta-block" id="hero-cta">
@@ -132,6 +159,8 @@ export default function Home() {
             <p className="pill reveal">Join our free live training</p>
             <h2 className="reveal">The Data Privacy Career Transition <span className="hl">Masterclass</span></h2>
             <p className="lede reveal">Get live access to our weekly session where we break down current market trends, real-world privacy scenarios, and the step-by-step roadmap to land a high-paying role this year.</p>
+            <p className="countdown-label training-countdown-label">Webinar starts in · {webinarDateLong} · {webinarTimeText}</p>
+            <Countdown className="countdown training-countdown" values={countdown} />
             <RegisterButton className="cta reveal" onClick={openRegister}><span className="cta-main">🎟 Save My Free Seat for the Masterclass <span aria-hidden="true">→</span></span><span className="cta-sub">Limited spots available · 100% free</span></RegisterButton>
           </div>
         </section>
@@ -163,7 +192,7 @@ export default function Home() {
         <p>© 2026 DataVerse Solutions. All rights reserved.</p>
       </div></footer>
 
-      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>Save your free seat · 100% free</span></div><RegisterButton className="sticky-register" onClick={openRegister}>Register</RegisterButton></div>
+      <div className="sticky-bar" data-sticky><div><strong>Free Live Masterclass</strong><span>{webinarDateShort} · {webinarTimeText}</span></div><RegisterButton className="sticky-register" onClick={openRegister}>Register</RegisterButton></div>
 
       <RegisterModal open={registerOpen} onClose={closeRegister} />
     </>

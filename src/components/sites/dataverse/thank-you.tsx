@@ -2,27 +2,18 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { webinarEnd, webinarStart } from "@/lib/webinar";
 
-const defaultEventTitle = "Free Data Privacy Career Masterclass – DataVerse Solutions";
+const eventTitle = "Free Data Privacy Career Masterclass – DataVerse Solutions";
 const calendarDetails = "Free live masterclass with Temi and DataVerse Solutions. Your join link will be sent to your email.";
 const whatsappUrl = "https://chat.whatsapp.com/EQGgwCtcU1k5M3GOTYByij?s=cl&p=i&ilr=4&iam=2";
-const defaultDurationMs = 60 * 60 * 1000;
 
 type Registration = { firstName: string; title: string; start: Date | null; end: Date | null };
 
-/** Calendly passes these when the event is set to redirect with event details. */
+/** The registration form passes the first name; the date is the next scheduled webinar. */
 function readRegistration(): Registration {
   const q = new URLSearchParams(window.location.search);
-  const start = q.get("event_start_time") ? new Date(q.get("event_start_time") as string) : null;
-  const validStart = start && !Number.isNaN(start.getTime()) ? start : null;
-  const end = q.get("event_end_time") ? new Date(q.get("event_end_time") as string) : null;
-  const validEnd = end && !Number.isNaN(end.getTime()) ? end : validStart && new Date(validStart.getTime() + defaultDurationMs);
-  return {
-    firstName: q.get("invitee_first_name") ?? (q.get("invitee_full_name") ?? "").split(" ")[0],
-    title: q.get("event_type_name") || defaultEventTitle,
-    start: validStart,
-    end: validEnd,
-  };
+  return { firstName: q.get("invitee_first_name") ?? "", title: eventTitle, start: webinarStart, end: webinarEnd };
 }
 
 const utcStamp = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
