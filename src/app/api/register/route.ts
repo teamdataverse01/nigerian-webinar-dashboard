@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { sendConfirmationEmail } from "@/lib/confirmation-email";
 import { hashForMeta, sendMetaEvent } from "@/lib/meta-server";
+import { tagWebinarRegistrant } from "@/lib/systeme";
 
 // Webinar registration: appends the registrant to the Google Sheet (through the
 // sheet's Apps Script web app) and reports CompleteRegistration to Meta with
@@ -86,7 +87,9 @@ export async function POST(request: NextRequest) {
       country: [hashForMeta(country)],
     },
   }).catch((e) => console.error("Meta Conversions API error", e));
-  await Promise.all([confirmation, metaEvent]);
+  const systemeTag = tagWebinarRegistrant({ email, firstName, lastName, phone, country })
+    .catch((e) => console.error("systeme.io error", e));
+  await Promise.all([confirmation, metaEvent, systemeTag]);
 
   return Response.json({ ok: true });
 }
