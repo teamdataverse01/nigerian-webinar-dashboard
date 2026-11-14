@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
   // The registration is already saved, so email or Meta failures are logged rather than shown to the visitor.
   const confirmation = sendConfirmationEmail({ email, firstName, lastName })
-    .catch((e) => console.error("Brevo confirmation email error", e));
+    .catch((e) => { console.error("Brevo confirmation email error", e); return false; });
   const metaEvent = sendMetaEvent(request, {
     eventName: "CompleteRegistration",
     eventId,
@@ -86,10 +86,11 @@ export async function POST(request: NextRequest) {
       ln: [hashForMeta(lastName)],
       country: [hashForMeta(country)],
     },
-  }).catch((e) => console.error("Meta Conversions API error", e));
+  }).catch((e) => { console.error("Meta Conversions API error", e); return false; });
   const systemeTag = tagWebinarRegistrant({ email, firstName, lastName, phone, country })
-    .catch((e) => console.error("systeme.io error", e));
-  await Promise.all([confirmation, metaEvent, systemeTag]);
+    .catch((e) => { console.error("systeme.io error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
+  const [emailSent, metaSent, systeme] = await Promise.all([confirmation, metaEvent, systemeTag]);
 
-  return Response.json({ ok: true });
+  // Per-integration status, so a test registration shows what worked (nothing secret in here).
+  return Response.json({ ok: true, integrations: { sheet: true, email: emailSent, meta: metaSent, systeme } });
 }

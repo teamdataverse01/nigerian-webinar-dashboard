@@ -4,9 +4,11 @@ const apiBase = "https://api.systeme.io/api";
 export const webinarRegistrantTagId = 2292646;
 
 type Registrant = { email: string; firstName: string; lastName: string; phone: string; country: string };
+/** "ok", or where it stopped (e.g. "no-key", "create:422", "tag:404"), for logs and the registration response. */
+export type SystemeResult = string;
 
 function apiKey() {
-  return process.env.SYSTEME_API_KEY ?? process.env.SYSTEMEAPIKEY;
+  return (process.env.SYSTEME_API_KEY ?? process.env.SYSTEMEAPIKEY)?.trim().replace(/^["']|["']$/g, "");
 }
 
 async function call(path: string, key: string, init: RequestInit = {}) {
@@ -16,10 +18,10 @@ async function call(path: string, key: string, init: RequestInit = {}) {
   });
 }
 
-/** Finds or creates the contact, then adds the webinar tag. Returns whether it worked. */
-export async function tagWebinarRegistrant(r: Registrant) {
+/** Finds or creates the contact, then adds the webinar tag. */
+export async function tagWebinarRegistrant(r: Registrant): Promise<SystemeResult> {
   const key = apiKey();
-  if (!key) return false;
+  if (!key) return "no-key";
 
   const created = await call("/contacts", key, {
     method: "POST",
@@ -39,15 +41,19 @@ export async function tagWebinarRegistrant(r: Registrant) {
     contactId = ((await created.json()) as { id?: number }).id;
   } else {
     // Usually "already exists": look the contact up by email instead.
+    const createError = await created.text();
     const found = await call(`/contacts?email=${encodeURIComponent(r.email)}`, key);
     if (found.ok) contactId = ((await found.json()) as { items?: { id: number }[] }).items?.[0]?.id;
     if (!contactId) {
-      console.error("systeme.io contact create failed", created.status, await created.text());
-      return false;
+      console.error("systeme.io contact create failed", created.status, createError);
+      return `create:${created.status} lookup:${found.status}`;
     }
   }
 
   const tagged = await call(`/contacts/${contactId}/tags`, key, { method: "POST", body: JSON.stringify({ tagId: webinarRegistrantTagId }) });
-  if (!tagged.ok) console.error("systeme.io tagging failed", tagged.status, await tagged.text());
-  return tagged.ok;
+  if (!tagged.ok) {
+    console.error("systeme.io tagging failed", tagged.status, await tagged.text());
+    return `tag:${tagged.status}`;
+  }
+  return "ok";
 }
