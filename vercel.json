@@ -12,6 +12,11 @@
       "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "GB" }],
       "destination": "https://webinar-dashboard-psi.vercel.app/",
       "permanent": false
+    },
+    {
+      "source": "/DASBOARD.HTML",
+      "destination": "/",
+      "permanent": false
     }
   ],
   "headers": [

@@ -9,8 +9,8 @@ const countryCodes = "AF AX AL DZ AS AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD B
 const pinnedCountries = ["US", "CA", "GB", "AU"];
 const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
 
-type Fields = { first_name: string; last_name: string; email: string; country: string; phone: string; sms_consent: boolean };
-const emptyFields: Fields = { first_name: "", last_name: "", email: "", country: "", phone: "", sms_consent: false };
+type Fields = { first_name: string; last_name: string; email: string; country: string; phone: string };
+const emptyFields: Fields = { first_name: "", last_name: "", email: "", country: "", phone: "" };
 
 function useCountryOptions() {
   return useMemo(() => {
@@ -63,7 +63,8 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, event_id: eventId, page_url: window.location.href, utm, test_event_code: testEventCode() }),
+        // Submitting the form is the consent (see the notice under the button).
+        body: JSON.stringify({ ...fields, sms_consent: true, event_id: eventId, page_url: window.location.href, utm, test_event_code: testEventCode() }),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) throw new Error(data.error || "Something went wrong. Please try again.");
@@ -109,15 +110,11 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
             <span>Phone (with country code)</span>
             <input required type="tel" autoComplete="tel" placeholder="+1 234 567 8900" maxLength={30} pattern="[+]?[0-9 ()\-.]{7,}" title="Include your country code, e.g. +1 234 567 8900" value={fields.phone} onChange={(e) => set("phone", e.target.value)} />
           </label>
-          <label className="rg-consent">
-            <input type="checkbox" checked={fields.sms_consent} onChange={(e) => set("sms_consent", e.target.checked)} />
-            <span>Text me reminders about the webinar. Message and data rates may apply. Reply STOP to opt out.</span>
-          </label>
-
           {error && <p className="rg-error" role="alert">{error}</p>}
           <button type="submit" className="cta rg-submit" disabled={submitting}>
             <span className="cta-main">{submitting ? "Saving your spot…" : "Save My Spot"}</span>
           </button>
+          <p className="rg-consent">By clicking Save My Spot, you agree to receive emails and text messages from Dataverse with information about the webinar, including the date, time, join link and reminders. Message and data rates may apply. Reply STOP to opt out.</p>
         </form>
       </div>
     </div>

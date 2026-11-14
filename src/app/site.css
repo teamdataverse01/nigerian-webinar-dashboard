@@ -169,8 +169,7 @@ button.cta:disabled { opacity: .7; cursor: progress; transform: none; }
 .rg-field input, .rg-field select { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-2); color: var(--text); font: 400 16px var(--body); color-scheme: dark; }
 .rg-field input::placeholder { color: var(--faint); }
 .rg-field input:focus, .rg-field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .25); }
-.rg-consent { display: flex; gap: 10px; align-items: flex-start; color: var(--muted); font-size: 13px; line-height: 1.45; cursor: pointer; }
-.rg-consent input { width: 18px; height: 18px; margin-top: 1px; flex: none; accent-color: var(--accent); }
+.rg-consent { margin: 0; color: var(--faint); font-size: 12px; line-height: 1.5; text-align: center; }
 .rg-error { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(255, 90, 90, .12); color: #ff9b9b; font-size: 14px; }
 .rg-submit { width: 100%; margin-top: 4px; padding: 16px 24px; }
 @keyframes rg-fade { from { opacity: 0; } }
