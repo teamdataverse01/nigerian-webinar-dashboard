@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { NextRequest } from "next/server";
-import { metaPixelId } from "@/lib/meta";
+import { metaPixelId, type MetaEventName } from "@/lib/meta";
 
 const graphApiVersion = "v27.0";
 
@@ -8,7 +8,7 @@ const graphApiVersion = "v27.0";
 export const hashForMeta = (value: string) => createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
 
 export type MetaServerEvent = {
-  eventName: "PageView" | "CompleteRegistration" | "Schedule";
+  eventName: MetaEventName;
   eventId: string;
   eventSourceUrl?: string;
   testEventCode?: string;

@@ -3,7 +3,7 @@ import { sendMetaEvent, type MetaServerEvent } from "@/lib/meta-server";
 
 // Server-side copy of Meta Pixel events (Conversions API). The browser sends the
 // same event_id to the pixel, so Meta deduplicates the pair into one conversion.
-const allowedEvents = new Set<MetaServerEvent["eventName"]>(["PageView", "CompleteRegistration", "Schedule"]);
+const allowedEvents = new Set<MetaServerEvent["eventName"]>(["PageView", "ViewContent", "CompleteRegistration", "SubmitApplication", "Schedule"]);
 
 type Body = { event_name?: string; event_id?: string; event_source_url?: string; test_event_code?: string };
 

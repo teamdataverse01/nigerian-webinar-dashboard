@@ -15,6 +15,8 @@ type Body = {
   phone?: string;
   sms_consent?: boolean;
   event_id?: string;
+  /** Separate ID for the SubmitApplication event, which fires alongside CompleteRegistration. */
+  application_event_id?: string;
   page_url?: string;
   utm?: Record<string, string>;
   test_event_code?: string;
@@ -40,6 +42,7 @@ export async function POST(request: NextRequest) {
   const phone = clean(body.phone, 30);
   const phoneDigits = phone.replace(/\D/g, "");
   const eventId = clean(body.event_id, 100);
+  const applicationEventId = clean(body.application_event_id, 100);
 
   if (!firstName || !lastName) return Response.json({ ok: false, error: "Please enter your first and last name." }, { status: 400 });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return Response.json({ ok: false, error: "Please enter a valid email address." }, { status: 400 });
@@ -74,9 +77,7 @@ export async function POST(request: NextRequest) {
   // The registration is already saved, so email or Meta failures are logged rather than shown to the visitor.
   const confirmation = sendConfirmationEmail({ email, firstName, lastName })
     .catch((e) => { console.error("Brevo confirmation email error", e); return false; });
-  const metaEvent = sendMetaEvent(request, {
-    eventName: "CompleteRegistration",
-    eventId,
+  const metaShared = {
     eventSourceUrl: clean(body.page_url, 1000),
     testEventCode: clean(body.test_event_code, 30),
     hashedUserData: {
@@ -86,7 +87,12 @@ export async function POST(request: NextRequest) {
       ln: [hashForMeta(lastName)],
       country: [hashForMeta(country)],
     },
-  }).catch((e) => { console.error("Meta Conversions API error", e); return false; });
+  };
+  const metaEvent = Promise.all([
+    sendMetaEvent(request, { eventName: "CompleteRegistration", eventId, ...metaShared }),
+    applicationEventId ? sendMetaEvent(request, { eventName: "SubmitApplication", eventId: applicationEventId, ...metaShared }) : true,
+  ]).then((results) => results.every(Boolean))
+    .catch((e) => { console.error("Meta Conversions API error", e); return false; });
   const systemeTag = tagWebinarRegistrant({ email, firstName, lastName, phone, country })
     .catch((e) => { console.error("systeme.io error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
   const [emailSent, metaSent, systeme] = await Promise.all([confirmation, metaEvent, systemeTag]);

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { PageLink } from "@/components/page-link";
 import { useEffect, useState } from "react";
 import { webinarEnd, webinarJoinUrl, webinarMeetingId, webinarPasscode, webinarStart, whatsappCommunityUrl } from "@/lib/webinar";
 
@@ -66,10 +66,10 @@ export function ThankYou() {
   return (
     <>
       <header className="topbar">
-        <Link href="/" aria-label="DataVerse Solutions home">
+        <PageLink href="/" aria-label="DataVerse Solutions home">
           {/* eslint-disable-next-line @next/next/no-img-element -- matches the landing page */}
           <img className="topbar-logo" src="/sites/dataverse/dataverse-logo.webp" alt="DataVerse Solutions" />
-        </Link>
+        </PageLink>
       </header>
 
       <main>
@@ -115,7 +115,7 @@ export function ThankYou() {
                 <h2>Want to Fast-Track Your Transition Into a <span className="hl">$140K–$250K Data Privacy Career?</span></h2>
                 <p className="lede">You don&apos;t have to wait until the webinar to take the next step. Book a free 1:1 career strategy call with Temi and her team to discuss your background, career goals, and potential pathway into data privacy.</p>
                 <div className="cta-block">
-                  <Link className="cta" href="/apply"><span className="cta-main">📞 Book My Free Career Strategy Call <span aria-hidden="true">→</span></span></Link>
+                  <PageLink className="cta" href="/apply"><span className="cta-main">📞 Book My Free Career Strategy Call <span aria-hidden="true">→</span></span></PageLink>
                   <button type="button" className="ghost-link ty-decline" onClick={() => setAttendingOnly(true)}>I&apos;ll Attend the Webinar Instead</button>
                 </div>
               </>

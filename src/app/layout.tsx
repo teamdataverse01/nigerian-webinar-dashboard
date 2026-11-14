@@ -28,6 +28,11 @@ export default function RootLayout({
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window,document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
+          // Only send the events this site fires itself (each paired with a Conversions API copy):
+          // no automatic button-click events, and no automatic PageView on in-app page changes
+          // (pages link to each other with full page loads, so each load sends its own paired PageView).
+          fbq.disablePushState = true;
+          fbq('set', 'autoConfig', false, '${metaPixelId}');
           fbq('init', '${metaPixelId}');
           (function () {
             var testCode;

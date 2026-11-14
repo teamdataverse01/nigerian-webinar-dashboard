@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { PageLink } from "@/components/page-link";
 import { useCallback, useEffect, useState } from "react";
 import { RegisterModal } from "@/components/sites/dataverse/register-modal";
+import { trackConversion } from "@/lib/meta";
 import { webinarDateLong, webinarDateShort, webinarStart, webinarTimeText } from "@/lib/webinar";
 
 function useCountdown() {
@@ -52,6 +53,8 @@ export default function Home() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const openRegister = useCallback(() => setRegisterOpen(true), []);
   const closeRegister = useCallback(() => setRegisterOpen(false), []);
+
+  useEffect(() => trackConversion("ViewContent"), []);
 
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
@@ -182,7 +185,7 @@ export default function Home() {
           <div className="wrap center narrow">
             <h2 className="reveal">Prefer a <span className="hl">1:1 Session</span>?</h2>
             <p className="lede reveal">Book a free career strategy call with Temi and her team to map out your pathway into data privacy.</p>
-            <Link className="ghost-link reveal" href="/apply">📞 Book My Free Career Strategy Call →</Link>
+            <PageLink className="ghost-link reveal" href="/apply">📞 Book My Free Career Strategy Call →</PageLink>
           </div>
         </section>
       </main>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { firePixelEvent, testEventCode } from "@/lib/meta";
 
@@ -22,7 +21,6 @@ function useCountryOptions() {
 }
 
 export function RegisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const router = useRouter();
   const countries = useCountryOptions();
   const [fields, setFields] = useState<Fields>(emptyFields);
   const [error, setError] = useState("");
@@ -57,6 +55,7 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
     setSubmitting(true);
     setError("");
     const eventId = crypto.randomUUID();
+    const applicationEventId = crypto.randomUUID();
     const search = new URLSearchParams(window.location.search);
     const utm = Object.fromEntries(utmKeys.filter((k) => search.get(k)).map((k) => [k, search.get(k) as string]));
     try {
@@ -64,12 +63,15 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // Submitting the form is the consent (see the notice under the button).
-        body: JSON.stringify({ ...fields, sms_consent: true, event_id: eventId, page_url: window.location.href, utm, test_event_code: testEventCode() }),
+        body: JSON.stringify({ ...fields, sms_consent: true, event_id: eventId, application_event_id: applicationEventId, page_url: window.location.href, utm, test_event_code: testEventCode() }),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) throw new Error(data.error || "Something went wrong. Please try again.");
       firePixelEvent("CompleteRegistration", eventId);
-      router.push(`/thank-you?${new URLSearchParams({ invitee_first_name: fields.first_name.trim() })}`);
+      firePixelEvent("SubmitApplication", applicationEventId);
+      // Give the pixel a moment to send, then load the thank-you page fully so its PageView is paired too.
+      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      window.location.assign(new URL(`/thank-you?${new URLSearchParams({ invitee_first_name: fields.first_name.trim() })}`, window.location.href).href);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubmitting(false);

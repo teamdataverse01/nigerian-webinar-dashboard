@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { PageLink } from "@/components/page-link";
 import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { calendlyScriptUrl, onCalendlyScheduled, openCalendlyPopup } from "@/lib/calendly";
@@ -348,10 +348,10 @@ export function ApplicationForm() {
     <div className="ap-root">
       <Script src={calendlyScriptUrl} strategy="afterInteractive" />
       <div className="ap-progress"><div className="ap-progress-fill" style={{ width: `${(Math.min(current, total) / total) * 100}%` }} /></div>
-      <Link className="ap-brand" href="/" aria-label="DataVerse Solutions home">
+      <PageLink className="ap-brand" href="/" aria-label="DataVerse Solutions home">
         {/* eslint-disable-next-line @next/next/no-img-element -- processed data URL */}
         {logo && <img src={logo} alt="DataVerse Solutions" />}
-      </Link>
+      </PageLink>
 
       <main className="ap-stage">
         {steps.map((step, i) => {
