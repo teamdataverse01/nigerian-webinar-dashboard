@@ -4,7 +4,8 @@ import {
 } from "@/lib/webinar";
 
 // Registration confirmation, sent through Brevo's transactional email API right after sign-up.
-const sender = { name: "Dataverse", email: "msalaudeen@dataversesolutions.org" };
+// Must be a verified sender in the Brevo account that BREVO_API_KEY belongs to.
+const sender = { name: "Dataverse Solutions", email: "info@dataversesolutions.org" };
 const subject = "You're registered: Data Privacy Career Masterclass (Sat, Nov 21)";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
