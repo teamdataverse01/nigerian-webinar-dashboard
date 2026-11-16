@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { addWebinarRegistrantToBrevo } from "@/lib/brevo-contacts";
 import { sendConfirmationEmail } from "@/lib/confirmation-email";
 import { hashForMeta, sendMetaEvent } from "@/lib/meta-server";
 import { tagWebinarRegistrant } from "@/lib/systeme";
@@ -95,8 +96,10 @@ export async function POST(request: NextRequest) {
     .catch((e) => { console.error("Meta Conversions API error", e); return false; });
   const systemeTag = tagWebinarRegistrant({ email, firstName, lastName, phone, country })
     .catch((e) => { console.error("systeme.io error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
-  const [emailSent, metaSent, systeme] = await Promise.all([confirmation, metaEvent, systemeTag]);
+  const brevoContact = addWebinarRegistrantToBrevo({ email, firstName, lastName, phone, country })
+    .catch((e) => { console.error("Brevo contact error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
+  const [emailSent, metaSent, systeme, brevoList] = await Promise.all([confirmation, metaEvent, systemeTag, brevoContact]);
 
   // Per-integration status, so a test registration shows what worked (nothing secret in here).
-  return Response.json({ ok: true, integrations: { sheet: true, email: emailSent, meta: metaSent, systeme } });
+  return Response.json({ ok: true, integrations: { sheet: true, email: emailSent, meta: metaSent, systeme, brevoList } });
 }
