@@ -4,7 +4,7 @@
 /** "Webinar Nov 21 Registrants" in the company Brevo account — change for the next webinar. */
 export const webinarRegistrantListId = 5;
 
-type Registrant = { email: string; firstName: string; lastName: string; phone: string; country: string };
+type Registrant = { email: string; firstName: string; lastName: string; phone: string; country: string; smsConsent: boolean };
 
 /**
  * Brevo's SMS field needs the full international number, e.g. +12025550199.
@@ -25,7 +25,10 @@ export function toInternationalPhone(phone: string, country: string) {
   return `+${digits}`;
 }
 
-/** Creates or updates the contact and adds it to the webinar list. Returns "ok" or where it stopped. */
+/**
+ * Creates or updates the contact and adds it to the webinar list. The phone number is only
+ * saved for SMS when the registrant ticked the SMS consent box. Returns "ok" or where it stopped.
+ */
 export async function addWebinarRegistrantToBrevo(r: Registrant): Promise<string> {
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) return "no-key";
@@ -37,6 +40,11 @@ export async function addWebinarRegistrantToBrevo(r: Registrant): Promise<string
   });
 
   const names = { FIRSTNAME: r.firstName, LASTNAME: r.lastName };
+  if (!r.smsConsent) {
+    const res = await save(names);
+    if (!res.ok) console.error("Brevo contact save failed", await res.text());
+    return res.ok ? "ok-email-only" : `contact:${res.status}`;
+  }
   let res = await save({ ...names, SMS: toInternationalPhone(r.phone, r.country) });
   if (!res.ok) {
     // Brevo rejects a number it considers invalid or already used by another contact; keep the email contact anyway.

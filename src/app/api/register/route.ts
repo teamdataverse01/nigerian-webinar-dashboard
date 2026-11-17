@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     .catch((e) => { console.error("Meta Conversions API error", e); return false; });
   const systemeTag = tagWebinarRegistrant({ email, firstName, lastName, phone, country })
     .catch((e) => { console.error("systeme.io error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
-  const brevoContact = addWebinarRegistrantToBrevo({ email, firstName, lastName, phone, country })
+  const brevoContact = addWebinarRegistrantToBrevo({ email, firstName, lastName, phone, country, smsConsent: body.sms_consent === true })
     .catch((e) => { console.error("Brevo contact error", e); return `error:${e instanceof Error ? e.message : "unknown"}`; });
   const [emailSent, metaSent, systeme, brevoList] = await Promise.all([confirmation, metaEvent, systemeTag, brevoContact]);
 
