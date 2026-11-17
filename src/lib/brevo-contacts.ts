@@ -8,12 +8,20 @@ type Registrant = { email: string; firstName: string; lastName: string; phone: s
 
 /**
  * Brevo's SMS field needs the full international number, e.g. +12025550199.
- * The form asks for the country code; US/Canada numbers typed without it get +1.
+ * The form asks for the country code, but people often type local numbers, so the
+ * common US/Canada and Nigerian local formats are converted; anything else is used as typed.
  */
 export function toInternationalPhone(phone: string, country: string) {
   const digits = phone.replace(/\D/g, "");
-  if (phone.trim().startsWith("+")) return `+${digits}`;
-  if ((country === "US" || country === "CA") && digits.length === 10) return `+1${digits}`;
+  const typedPlus = phone.trim().startsWith("+");
+  if (country === "US" || country === "CA") {
+    if (digits.length === 10) return `+1${digits}`;
+    if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  }
+  if (country === "NG" && !typedPlus) {
+    if (digits.length === 11 && digits.startsWith("0")) return `+234${digits.slice(1)}`;
+    if (digits.length === 10) return `+234${digits}`;
+  }
   return `+${digits}`;
 }
 
