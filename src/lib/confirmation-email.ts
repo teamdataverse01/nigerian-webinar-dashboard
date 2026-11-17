@@ -4,9 +4,10 @@ import {
 } from "@/lib/webinar";
 
 // Registration confirmation, sent through Brevo's transactional email API right after sign-up.
+// Wording follows the team's "SALES, MARKETING AND ONBOARDING EMAILS" doc word for word.
 // Must be a verified sender in the Brevo account that BREVO_API_KEY belongs to.
 const sender = { name: "Dataverse Solutions", email: "info@dataversesolutions.org" };
-const subject = "You're registered: Data Privacy Career Masterclass (Sat, Nov 21)";
+const subject = "Registration Confirmation";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
 
@@ -22,39 +23,38 @@ function html(firstName: string) {
   const name = esc(firstName);
   const calendarUrl = esc(webinarGoogleCalendarUrl());
   const p = "margin:0 0 16px;font-size:16px;line-height:1.6;color:#1f1f29;";
-  const btn = "display:inline-block;padding:14px 26px;border-radius:999px;background:#7c3aed;color:#ffffff;font-weight:700;text-decoration:none;";
+  const link = "color:#1a73e8;";
   return `<!doctype html><html><body style="margin:0;padding:0;background:#f4f2fa;font-family:Arial,Helvetica,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2fa;padding:24px 12px;"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;padding:32px 28px;">
 <tr><td>
-<p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c3aed;">Registration Confirmation</p>
 <p style="${p}">Hi ${name},</p>
 <p style="${p}">Thank you for registering for ${esc(webinarName)}!</p>
 <p style="${p}">This webinar is not just about learning privacy regulations. It's about understanding how to turn your existing professional experience into a valuable career in data privacy.</p>
-<p style="${p}"><strong>The results are already happening:</strong><br>A lawyer with no prior data privacy experience secured two data privacy roles in under six weeks.</p>
+<p style="${p}margin-bottom:8px;"><strong>The results are already happening:</strong></p>
+<p style="${p}padding-left:24px;"><em>A lawyer with no prior data privacy experience secured two data privacy roles in under six weeks.</em></p>
 <p style="${p}margin-bottom:8px;"><strong>During the webinar, you'll understand:</strong></p>
-${learnPoints.map((l) => `<p style="margin:0 0 6px;font-size:16px;line-height:1.5;color:#1f1f29;">✅ ${esc(l)}</p>`).join("")}
-<div style="margin:24px 0;padding:20px;border-radius:12px;background:#f6f1ff;border-left:4px solid #7c3aed;">
-<p style="margin:0 0 10px;font-size:14px;font-weight:700;letter-spacing:1px;color:#7c3aed;">👉 WEBINAR DETAILS</p>
-<p style="margin:0 0 6px;font-size:16px;color:#1f1f29;"><strong>Date:</strong> ${esc(webinarDateLong)}</p>
-<p style="margin:0 0 6px;font-size:16px;color:#1f1f29;"><strong>Time:</strong> ${esc(webinarTimeText)}</p>
-<p style="margin:0 0 6px;font-size:16px;color:#1f1f29;"><strong>Location:</strong> <a href="${esc(webinarJoinUrl)}" style="color:#7c3aed;">Join on Zoom</a></p>
-<p style="margin:0;font-size:16px;color:#1f1f29;"><strong>Meeting ID:</strong> ${esc(webinarMeetingId)} &nbsp;·&nbsp; <strong>Passcode:</strong> ${esc(webinarPasscode)}</p>
-</div>
+${learnPoints.map((l) => `<p style="margin:0 0 8px;font-size:16px;line-height:1.5;color:#1f1f29;">✅ ${esc(l)}</p>`).join("")}
+<p style="${p}margin-top:20px;"><strong>👉 WEBINAR DETAILS:</strong></p>
+<p style="${p}margin-bottom:8px;"><strong>DATE: ${esc(webinarDateLong)}</strong></p>
+<p style="${p}margin-bottom:8px;"><strong>TIME: ${esc(webinarTimeText)}</strong></p>
+<p style="${p}margin-bottom:4px;"><strong>Location:</strong></p>
+<p style="margin:0 0 4px;font-size:16px;line-height:1.5;word-break:break-all;"><a href="${esc(webinarJoinUrl)}" style="${link}">${esc(webinarJoinUrl)}</a></p>
+<p style="${p}">MEETING ID: ${esc(webinarMeetingId)} PASSCODE: ${esc(webinarPasscode)}</p>
 <p style="${p}margin-bottom:8px;"><strong>Do these now:</strong></p>
-<p style="margin:0 0 6px;font-size:16px;color:#1f1f29;">1. <a href="${calendarUrl}" style="color:#7c3aed;">Add the webinar to your calendar</a>.</p>
-<p style="margin:0 0 6px;font-size:16px;color:#1f1f29;">2. Bookmark the <a href="${esc(webinarJoinUrl)}" style="color:#7c3aed;">webinar room</a>.</p>
-<p style="margin:0 0 20px;font-size:16px;color:#1f1f29;">3. Come prepared with your questions.</p>
-<p style="margin:0 0 24px;"><a href="${esc(whatsappCommunityUrl)}" style="${btn}">Join Our WhatsApp Community</a></p>
-<p style="margin:0;font-size:16px;line-height:1.6;color:#1f1f29;">See you live!<br>The Dataverse Team</p>
+<ul style="margin:0 0 16px;padding-left:24px;font-size:16px;line-height:1.7;color:#1f1f29;">
+<li><a href="${calendarUrl}" style="${link}">Add the webinar to your calendar.</a></li>
+<li>Bookmark the webinar room.</li>
+<li>Come prepared with your questions.</li>
+<li><a href="${esc(whatsappCommunityUrl)}" style="${link}">Join Our WhatsApp Community here</a></li>
+</ul>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#1f1f29;">See you live!</p>
 </td></tr></table>
 </td></tr></table></body></html>`;
 }
 
 function text(firstName: string) {
   return [
-    "Registration Confirmation",
-    "",
     `Hi ${firstName},`,
     "",
     `Thank you for registering for ${webinarName}!`,
@@ -65,23 +65,25 @@ function text(firstName: string) {
     "A lawyer with no prior data privacy experience secured two data privacy roles in under six weeks.",
     "",
     "During the webinar, you'll understand:",
-    ...learnPoints.map((l) => `- ${l}`),
+    ...learnPoints.map((l) => `✅ ${l}`),
     "",
-    "WEBINAR DETAILS",
-    `Date: ${webinarDateLong}`,
-    `Time: ${webinarTimeText}`,
-    `Location: ${webinarJoinUrl}`,
-    `Meeting ID: ${webinarMeetingId}  Passcode: ${webinarPasscode}`,
+    "👉 WEBINAR DETAILS:",
+    "",
+    `DATE: ${webinarDateLong}`,
+    "",
+    `TIME: ${webinarTimeText}`,
+    "",
+    "Location:",
+    webinarJoinUrl,
+    `MEETING ID: ${webinarMeetingId} PASSCODE: ${webinarPasscode}`,
     "",
     "Do these now:",
-    `1. Add the webinar to your calendar: ${webinarGoogleCalendarUrl()}`,
-    "2. Bookmark the webinar room.",
-    "3. Come prepared with your questions.",
-    "",
-    `Join Our WhatsApp Community: ${whatsappCommunityUrl}`,
+    `• Add the webinar to your calendar. ${webinarGoogleCalendarUrl()}`,
+    "• Bookmark the webinar room.",
+    "• Come prepared with your questions.",
+    `• Join Our WhatsApp Community here: ${whatsappCommunityUrl}`,
     "",
     "See you live!",
-    "The Dataverse Team",
   ].join("\n");
 }
 
