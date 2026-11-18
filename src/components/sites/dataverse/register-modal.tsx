@@ -114,7 +114,7 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
           </label>
           <label className="rg-sms-consent">
             <input type="checkbox" checked={fields.sms_consent} onChange={(e) => set("sms_consent", e.target.checked)} />
-            <span>Yes, text me webinar reminders. By checking this box, I agree to receive recurring automated text messages from Dataverse Solutions about the webinar at the phone number provided. Consent is not a condition of registration. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
+            <span>I agree to receive marketing text messages from Dataverse Solutions about webinars, training programs and enrollment opportunities at the phone number provided. Consent is not a condition of registration. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
           </label>
           {error && <p className="rg-error" role="alert">{error}</p>}
           <button type="submit" className="cta rg-submit" disabled={submitting}>
