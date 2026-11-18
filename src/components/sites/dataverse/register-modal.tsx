@@ -119,7 +119,8 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
           {error && <p className="rg-error" role="alert">{error}</p>}
           <button type="submit" className="cta rg-submit" disabled={submitting}>
             <span className="cta-main">{submitting ? "Saving your spot…" : "Save My Spot"}</span>
-          </button>        </form>
+          </button>
+          <p className="rg-email-notice">By registering, you agree to receive emails from Dataverse Solutions about this webinar and related training programs. You can unsubscribe at any time.</p>        </form>
       </div>
     </div>
   );
