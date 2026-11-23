@@ -1,7 +1,7 @@
 // Adds webinar registrants to a Brevo contact list, so the team can send them
 // scheduled email/SMS reminders from Brevo.
 
-/** "Webinar Dec 5 Registrants" in the company Brevo account — change for the next webinar. */
+/** "Webinar Nov 28 Registrants" in the company Brevo account — change for the next webinar. */
 export const webinarRegistrantListId = 6;
 
 type Registrant = { email: string; firstName: string; lastName: string; phone: string; country: string; smsConsent: boolean };

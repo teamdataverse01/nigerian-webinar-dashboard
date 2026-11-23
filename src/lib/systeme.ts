@@ -1,6 +1,6 @@
 // Adds webinar registrants to systeme.io and tags them, using the public API.
 const apiBase = "https://api.systeme.io/api";
-/** "Webinar Registrants - December 5 2026 (Americans)" — change when the webinar date changes. */
+/** "Webinar Registrants - November 28 2026 (Americans)" — change when the webinar date changes. */
 export const webinarRegistrantTagId = 2309504;
 
 type Registrant = { email: string; firstName: string; lastName: string; phone: string; country: string };
